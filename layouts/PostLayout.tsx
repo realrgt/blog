@@ -45,7 +45,8 @@ export default async function PostLayout({
   children,
   params: { locale },
 }: LayoutProps) {
-  const { filePath, path, slug, date, title, tags, language, series, toc, summary, images } = content
+  const { filePath, path, slug, date, title, tags, language, series, toc, summary, images } =
+    content
   const basePath = path.split('/')[0]
   const { t } = await createTranslation(locale, 'home')
   const tableOfContents: Toc = toc as unknown as Toc
@@ -106,7 +107,7 @@ export default async function PostLayout({
                             height={38}
                             alt="avatar"
                             title="avatar"
-                            className="h-10 w-10 object-cover object-top rounded-full"
+                            className="h-10 w-10 rounded-full object-cover object-top"
                           />
                         </Link>
                       )}

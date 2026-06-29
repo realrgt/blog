@@ -125,7 +125,7 @@ export function executeCommand(
         output:
           locale === 'pt'
             ? '> Processando... Acesso concedido! Envie uma mensagem :)\n> ergitorubildo@gmail.com'
-            : "> Processing... Access granted! Let\'s talk :)\n> ergitorubildo@gmail.com",
+            : "> Processing... Access granted! Let's talk :)\n> ergitorubildo@gmail.com",
       }
     case 'cat resume.pdf':
       return {

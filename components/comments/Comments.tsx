@@ -14,7 +14,7 @@ export default function Comments({ post, locale }: CommentsProps) {
     <div className="flex justify-center rounded-lg bg-gray-900 p-6 dark:bg-none">
       <Giscus
         id="comments"
-        repo="realrgt/portfolio"
+        repo="realrgt/blog"
         repoId="1048676460"
         category="Posts"
         mapping="specific"
