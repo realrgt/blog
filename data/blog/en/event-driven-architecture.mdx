@@ -1,0 +1,354 @@
+---
+title: 'Event-Driven Architecture: Rethinking How Systems Communicate'
+date: '2025-01-22'
+language: en
+tags: ['system-design', 'event-driven', 'architecture', 'messaging']
+authors: ['ergito-vilanculos']
+draft: true
+summary: 'What if your services did not have to wait for each other? Event-driven architecture changes the game by letting systems communicate through events instead of direct calls. Let me show you why this matters.'
+images: ['/static/images/event-driven.png']
+---
+
+There's a fundamental shift happening in how we build systems. Instead of services constantly asking each other "hey, did anything happen?", they just announce "hey, this happened!" and whoever cares can react.
+
+This is event-driven architecture, and it's a game changer.
+
+## Request-Response vs Events
+
+Traditional architecture is like a phone call:
+```
+Service A: "Hey B, process this order"
+Service B: "OK, processing... done"
+Service A: "Thanks, now I can continue"
+```
+
+Event-driven is like a group chat:
+```
+Service A: "New order created!" (posts to channel)
+Service B: (sees message) "I'll handle inventory"
+Service C: (sees message) "I'll send confirmation email"
+Service D: (sees message) "I'll update analytics"
+```
+
+In the first model, Service A has to wait for B. In the second, A just announces and moves on.
+
+## Why Go Event-Driven?
+
+### 1. Loose Coupling
+
+Services don't need to know about each other.
+
+```
+Request-Response:
+OrderService must know about:
+  - InventoryService
+  - EmailService
+  - AnalyticsService
+  - PaymentService
+
+Event-Driven:
+OrderService just emits "OrderCreated"
+Other services subscribe to events they care about
+```
+
+Adding a new service? Just subscribe to the events you need. No changes to existing services.
+
+### 2. Scalability
+
+Each consumer can scale independently.
+
+```
+High email volume? Scale email service.
+High analytics load? Scale analytics service.
+Order service doesn't care.
+```
+
+### 3. Resilience
+
+If the email service is down, orders still process. Emails get sent when it comes back up.
+
+```
+Traditional:
+OrderService → EmailService (down) → Order fails ❌
+
+Event-Driven:
+OrderService → Event Queue → (waits) → EmailService (back up) → Email sent ✓
+```
+
+### 4. Audit Trail
+
+Events naturally create a history of everything that happened.
+
+```
+OrderCreated { orderId: 123, userId: 456, items: [...] }
+PaymentProcessed { orderId: 123, amount: 99.99 }
+InventoryReserved { orderId: 123, items: [...] }
+OrderShipped { orderId: 123, trackingNumber: "..." }
+```
+
+## Event Types
+
+### Domain Events
+
+Something happened in your business domain.
+
+```javascript
+// Examples
+{
+  type: "OrderCreated",
+  data: { orderId: "123", customerId: "456", items: [...] }
+}
+
+{
+  type: "PaymentFailed",
+  data: { orderId: "123", reason: "insufficient_funds" }
+}
+
+{
+  type: "UserRegistered",
+  data: { userId: "789", email: "user@example.com" }
+}
+```
+
+### Integration Events
+
+Events meant for external systems or bounded contexts.
+
+```javascript
+// Published for other microservices
+{
+  type: "OrderReadyForShipment",
+  data: { orderId: "123", warehouse: "NYC", priority: "high" }
+}
+```
+
+### System Events
+
+Infrastructure-level events.
+
+```javascript
+{
+  type: "ServiceStarted",
+  data: { service: "order-service", version: "1.2.3" }
+}
+
+{
+  type: "DatabaseConnectionLost",
+  data: { database: "orders-db", timestamp: "..." }
+}
+```
+
+## Event Anatomy
+
+A well-structured event:
+
+```javascript
+{
+  // Metadata
+  eventId: "uuid-here",           // Unique identifier
+  eventType: "OrderCreated",      // What happened
+  timestamp: "2025-01-22T10:30:00Z",
+  version: "1.0",                 // Schema version
+  source: "order-service",        // Who emitted it
+
+  // Correlation
+  correlationId: "request-123",   // Trace across services
+  causationId: "event-456",       // What caused this event
+
+  // Payload
+  data: {
+    orderId: "order-789",
+    customerId: "cust-123",
+    items: [...]
+  }
+}
+```
+
+## Patterns
+
+### Event Notification
+
+Just say something happened. Consumer fetches details if needed.
+
+```javascript
+// Light event
+{ type: "OrderCreated", data: { orderId: "123" } }
+
+// Consumer calls back for details
+GET /api/orders/123
+```
+
+**Pros:** Small events, always fresh data
+**Cons:** Extra API calls, coupling
+
+### Event-Carried State Transfer
+
+Include all relevant data in the event.
+
+```javascript
+// Fat event
+{
+  type: "OrderCreated",
+  data: {
+    orderId: "123",
+    customer: { id: "456", name: "John", email: "..." },
+    items: [...],
+    totals: { subtotal: 99, tax: 8, total: 107 }
+  }
+}
+```
+
+**Pros:** Consumer has everything, no callbacks
+**Cons:** Bigger events, data might be stale
+
+### Event Sourcing
+
+Store state as a sequence of events. More on this in a dedicated article!
+
+```javascript
+// Instead of storing current state:
+{ balance: 150 }
+
+// Store events:
+AccountCreated { amount: 100 }
+MoneyDeposited { amount: 100 }
+MoneyWithdrawn { amount: 50 }
+// Current state = replay events = 150
+```
+
+## Implementation Approaches
+
+### Simple: In-Memory Events
+
+Good for monoliths or starting out.
+
+```python
+class EventBus:
+    def __init__(self):
+        self.handlers = {}
+
+    def subscribe(self, event_type, handler):
+        if event_type not in self.handlers:
+            self.handlers[event_type] = []
+        self.handlers[event_type].append(handler)
+
+    def publish(self, event):
+        for handler in self.handlers.get(event['type'], []):
+            handler(event)
+
+# Usage
+bus = EventBus()
+bus.subscribe("OrderCreated", send_confirmation_email)
+bus.subscribe("OrderCreated", update_inventory)
+bus.publish({"type": "OrderCreated", "data": {...}})
+```
+
+### Production: Message Broker
+
+Use Kafka, RabbitMQ, or cloud services.
+
+```python
+# Publishing
+def create_order(order_data):
+    order = save_to_database(order_data)
+
+    event = {
+        "type": "OrderCreated",
+        "data": {"orderId": order.id, ...}
+    }
+
+    kafka.publish("orders", event)
+
+    return order
+
+# Consuming
+@kafka.consumer("orders")
+def handle_order_events(event):
+    if event["type"] == "OrderCreated":
+        send_confirmation_email(event["data"])
+```
+
+## Challenges
+
+### Eventual Consistency
+
+Data isn't immediately consistent across services.
+
+```
+User creates order → Order service saves it
+                  → Event published
+                  → Inventory service processes (later)
+
+For a moment, inventory thinks item is available
+when it's actually reserved.
+```
+
+**Solutions:**
+- Accept it (most cases it's fine)
+- Saga pattern for complex flows
+- UI shows "processing" state
+
+### Event Ordering
+
+Events might arrive out of order.
+
+```
+OrderCreated (at 10:00)
+OrderUpdated (at 10:01)
+OrderCancelled (at 10:02)
+
+What if OrderCancelled arrives before OrderCreated?
+```
+
+**Solutions:**
+- Use partitioning (same order → same partition)
+- Include sequence numbers
+- Idempotent handlers
+
+### Duplicate Events
+
+Network issues can cause duplicates.
+
+```
+OrderCreated → processed
+(network retry)
+OrderCreated → processed again?
+```
+
+**Solutions:**
+- Idempotent handlers (same event = same result)
+- Track processed event IDs
+
+```python
+def handle_order_created(event):
+    event_id = event["eventId"]
+
+    # Check if already processed
+    if redis.sismember("processed_events", event_id):
+        return  # Skip duplicate
+
+    # Process
+    create_inventory_reservation(event["data"])
+
+    # Mark as processed
+    redis.sadd("processed_events", event_id)
+```
+
+## When NOT to Use Events
+
+- **Simple CRUD apps:** Overkill
+- **Synchronous requirements:** User needs immediate response
+- **Strong consistency needs:** Bank transfers between accounts
+- **Small team/project:** Added complexity might not be worth it
+
+---
+
+Event-driven architecture isn't about replacing all communication with events. It's about recognizing when async, decoupled communication makes more sense than synchronous calls.
+
+Start with the parts of your system where services don't need immediate responses, and expand from there.
+
+Next up, we'll dive into the tools that make this possible: Kafka, RabbitMQ, and more.
+
+Questions? Drop them in the comments!
+
+Until next time!

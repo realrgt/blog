@@ -1,0 +1,354 @@
+---
+title: 'Arquitetura Orientada a Eventos: Repensando Como Sistemas se Comunicam'
+date: '2025-01-22'
+language: pt
+tags: ['system-design', 'event-driven', 'architecture', 'messaging']
+authors: ['ergito-vilanculos']
+draft: true
+summary: 'E se seus serviços não precisassem esperar uns pelos outros? Arquitetura orientada a eventos muda o jogo deixando sistemas se comunicarem através de eventos ao invés de chamadas diretas. Vou te mostrar por que isso importa.'
+images: ['/static/images/event-driven.png']
+---
+
+Tem uma mudança fundamental acontecendo em como construímos sistemas. Ao invés de serviços constantemente perguntando uns aos outros "ei, aconteceu alguma coisa?", eles simplesmente anunciam "ei, isso aconteceu!" e quem se importar pode reagir.
+
+Isso é arquitetura orientada a eventos, e é um game changer.
+
+## Request-Response vs Eventos
+
+Arquitetura tradicional é tipo uma ligação telefônica:
+```
+Serviço A: "Ei B, processa esse pedido"
+Serviço B: "OK, processando... pronto"
+Serviço A: "Valeu, agora posso continuar"
+```
+
+Orientada a eventos é tipo um grupo de WhatsApp:
+```
+Serviço A: "Pedido novo criado!" (posta no canal)
+Serviço B: (vê a mensagem) "Vou cuidar do estoque"
+Serviço C: (vê a mensagem) "Vou mandar email de confirmação"
+Serviço D: (vê a mensagem) "Vou atualizar analytics"
+```
+
+No primeiro modelo, Serviço A tem que esperar por B. No segundo, A só anuncia e segue em frente.
+
+## Por que Ir Event-Driven?
+
+### 1. Baixo Acoplamento
+
+Serviços não precisam saber sobre os outros.
+
+```
+Request-Response:
+OrderService precisa conhecer:
+  - InventoryService
+  - EmailService
+  - AnalyticsService
+  - PaymentService
+
+Event-Driven:
+OrderService só emite "OrderCreated"
+Outros serviços assinam os eventos que interessam
+```
+
+Adicionando um serviço novo? Só assina os eventos que você precisa. Sem mudanças nos serviços existentes.
+
+### 2. Escalabilidade
+
+Cada consumidor pode escalar independentemente.
+
+```
+Volume alto de email? Escala o serviço de email.
+Carga alta de analytics? Escala o serviço de analytics.
+O serviço de pedidos nem liga.
+```
+
+### 3. Resiliência
+
+Se o serviço de email tá fora, pedidos ainda são processados. Emails são enviados quando ele volta.
+
+```
+Tradicional:
+OrderService → EmailService (fora) → Pedido falha ❌
+
+Event-Driven:
+OrderService → Fila de Eventos → (espera) → EmailService (voltou) → Email enviado ✓
+```
+
+### 4. Trilha de Auditoria
+
+Eventos naturalmente criam um histórico de tudo que aconteceu.
+
+```
+OrderCreated { orderId: 123, userId: 456, items: [...] }
+PaymentProcessed { orderId: 123, amount: 99.99 }
+InventoryReserved { orderId: 123, items: [...] }
+OrderShipped { orderId: 123, trackingNumber: "..." }
+```
+
+## Tipos de Eventos
+
+### Eventos de Domínio
+
+Algo aconteceu no seu domínio de negócio.
+
+```javascript
+// Exemplos
+{
+  type: "OrderCreated",
+  data: { orderId: "123", customerId: "456", items: [...] }
+}
+
+{
+  type: "PaymentFailed",
+  data: { orderId: "123", reason: "insufficient_funds" }
+}
+
+{
+  type: "UserRegistered",
+  data: { userId: "789", email: "user@example.com" }
+}
+```
+
+### Eventos de Integração
+
+Eventos feitos pra sistemas externos ou bounded contexts.
+
+```javascript
+// Publicado pra outros microserviços
+{
+  type: "OrderReadyForShipment",
+  data: { orderId: "123", warehouse: "SP", priority: "high" }
+}
+```
+
+### Eventos de Sistema
+
+Eventos de nível de infraestrutura.
+
+```javascript
+{
+  type: "ServiceStarted",
+  data: { service: "order-service", version: "1.2.3" }
+}
+
+{
+  type: "DatabaseConnectionLost",
+  data: { database: "orders-db", timestamp: "..." }
+}
+```
+
+## Anatomia de um Evento
+
+Um evento bem estruturado:
+
+```javascript
+{
+  // Metadata
+  eventId: "uuid-aqui",           // Identificador único
+  eventType: "OrderCreated",      // O que aconteceu
+  timestamp: "2025-01-22T10:30:00Z",
+  version: "1.0",                 // Versão do schema
+  source: "order-service",        // Quem emitiu
+
+  // Correlação
+  correlationId: "request-123",   // Rastrear entre serviços
+  causationId: "event-456",       // O que causou esse evento
+
+  // Payload
+  data: {
+    orderId: "order-789",
+    customerId: "cust-123",
+    items: [...]
+  }
+}
+```
+
+## Padrões
+
+### Event Notification
+
+Só diz que algo aconteceu. Consumidor busca detalhes se precisar.
+
+```javascript
+// Evento leve
+{ type: "OrderCreated", data: { orderId: "123" } }
+
+// Consumidor chama de volta pra detalhes
+GET /api/orders/123
+```
+
+**Prós:** Eventos pequenos, dados sempre frescos
+**Contras:** Chamadas de API extras, acoplamento
+
+### Event-Carried State Transfer
+
+Inclui todos os dados relevantes no evento.
+
+```javascript
+// Evento gordo
+{
+  type: "OrderCreated",
+  data: {
+    orderId: "123",
+    customer: { id: "456", name: "João", email: "..." },
+    items: [...],
+    totals: { subtotal: 99, tax: 8, total: 107 }
+  }
+}
+```
+
+**Prós:** Consumidor tem tudo, sem callbacks
+**Contras:** Eventos maiores, dados podem estar desatualizados
+
+### Event Sourcing
+
+Armazena estado como uma sequência de eventos. Mais sobre isso num artigo dedicado!
+
+```javascript
+// Ao invés de guardar estado atual:
+{ balance: 150 }
+
+// Guarda eventos:
+AccountCreated { amount: 100 }
+MoneyDeposited { amount: 100 }
+MoneyWithdrawn { amount: 50 }
+// Estado atual = replay dos eventos = 150
+```
+
+## Abordagens de Implementação
+
+### Simples: Eventos em Memória
+
+Bom pra monolitos ou pra começar.
+
+```python
+class EventBus:
+    def __init__(self):
+        self.handlers = {}
+
+    def subscribe(self, event_type, handler):
+        if event_type not in self.handlers:
+            self.handlers[event_type] = []
+        self.handlers[event_type].append(handler)
+
+    def publish(self, event):
+        for handler in self.handlers.get(event['type'], []):
+            handler(event)
+
+# Uso
+bus = EventBus()
+bus.subscribe("OrderCreated", send_confirmation_email)
+bus.subscribe("OrderCreated", update_inventory)
+bus.publish({"type": "OrderCreated", "data": {...}})
+```
+
+### Produção: Message Broker
+
+Use Kafka, RabbitMQ, ou serviços de cloud.
+
+```python
+# Publicando
+def create_order(order_data):
+    order = save_to_database(order_data)
+
+    event = {
+        "type": "OrderCreated",
+        "data": {"orderId": order.id, ...}
+    }
+
+    kafka.publish("orders", event)
+
+    return order
+
+# Consumindo
+@kafka.consumer("orders")
+def handle_order_events(event):
+    if event["type"] == "OrderCreated":
+        send_confirmation_email(event["data"])
+```
+
+## Desafios
+
+### Consistência Eventual
+
+Dados não ficam imediatamente consistentes entre serviços.
+
+```
+Usuário cria pedido → Serviço de pedidos salva
+                   → Evento publicado
+                   → Serviço de estoque processa (depois)
+
+Por um momento, estoque acha que item está disponível
+quando na verdade já está reservado.
+```
+
+**Soluções:**
+- Aceita (na maioria dos casos tá ok)
+- Padrão Saga pra fluxos complexos
+- UI mostra estado "processando"
+
+### Ordenação de Eventos
+
+Eventos podem chegar fora de ordem.
+
+```
+OrderCreated (às 10:00)
+OrderUpdated (às 10:01)
+OrderCancelled (às 10:02)
+
+E se OrderCancelled chega antes de OrderCreated?
+```
+
+**Soluções:**
+- Use particionamento (mesmo pedido → mesma partição)
+- Inclua números de sequência
+- Handlers idempotentes
+
+### Eventos Duplicados
+
+Problemas de rede podem causar duplicatas.
+
+```
+OrderCreated → processado
+(retry de rede)
+OrderCreated → processado de novo?
+```
+
+**Soluções:**
+- Handlers idempotentes (mesmo evento = mesmo resultado)
+- Rastrear IDs de eventos processados
+
+```python
+def handle_order_created(event):
+    event_id = event["eventId"]
+
+    # Verifica se já foi processado
+    if redis.sismember("processed_events", event_id):
+        return  # Pula duplicata
+
+    # Processa
+    create_inventory_reservation(event["data"])
+
+    # Marca como processado
+    redis.sadd("processed_events", event_id)
+```
+
+## Quando NÃO Usar Eventos
+
+- **Apps CRUD simples:** Exagero
+- **Requisitos síncronos:** Usuário precisa de resposta imediata
+- **Consistência forte necessária:** Transferências bancárias entre contas
+- **Time/projeto pequeno:** Complexidade adicional pode não valer
+
+---
+
+Arquitetura orientada a eventos não é sobre substituir toda comunicação por eventos. É sobre reconhecer quando comunicação assíncrona e desacoplada faz mais sentido do que chamadas síncronas.
+
+Comece com as partes do seu sistema onde serviços não precisam de respostas imediatas, e expanda dali.
+
+No próximo, vamos mergulhar nas ferramentas que tornam isso possível: Kafka, RabbitMQ, e mais.
+
+Dúvidas? Manda nos comentários!
+
+Até a próxima!
