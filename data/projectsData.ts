@@ -12,10 +12,10 @@ type ProjectsData = {
 const projectsData: ProjectsData = {
   en: [
     {
-      title: 'Bookify',
+      title: 'Gestify',
       description: `A backend API built with .NET, PostgreSQL, Redis, Keycloak, and Docker. Implements authentication, caching, messaging, logging, and testing strategies. Applies Clean Architecture, CQRS, and Domain-Driven Design principles.`,
-      imgSrc: '/static/images/mpesa_sdk_dart.png',
-      href: 'https://github.com/realrgt/bookify',
+      imgSrc: '/static/images/gestify.png',
+      href: 'https://github.com/realrgt/gestify',
     },
     {
       title: 'Mpesa SDK',
@@ -27,10 +27,10 @@ const projectsData: ProjectsData = {
 
   pt: [
     {
-      title: 'Bookify',
+      title: 'Gestify',
       description: `Uma API backend construída com .NET, PostgreSQL, Redis, Keycloak e Docker. Implementa estratégias de autenticação, cache, mensageria, logging e testes. Aplica os princípios de Clean Architecture, CQRS e Domain-Driven Design.`,
-      imgSrc: '/static/images/mpesa_sdk_dart.png',
-      href: 'https://github.com/realrgt/bookify',
+      imgSrc: '/static/images/gestify.png',
+      href: 'https://github.com/realrgt/gestify',
     },
     {
       title: 'Mpesa SDK',
