@@ -65,7 +65,7 @@ export default function PostMinimal({
 
             {/* Blog Stats (Likes & Views) */}
             <div className="flex justify-center py-6">
-              <BlogStats slug={slug} locale={locale} />
+              <BlogStats slug={slug} />
             </div>
             <footer>
               <div className="flex flex-col text-sm font-medium sm:flex-row sm:justify-between sm:text-base">
