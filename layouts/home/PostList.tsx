@@ -17,6 +17,7 @@ interface Post {
   tags: string[]
   language: string
   draft?: boolean
+  images?: string[]
 }
 
 interface PostListProps {
@@ -37,7 +38,7 @@ const PostList: React.FC<PostListProps> = ({ posts, locale, maxDisplay }) => {
     <ul className="divide-y divide-gray-200/50 dark:divide-gray-700/50">
       {!posts.length && <li>{t('noposts')}</li>}
       {posts.slice(0, maxDisplay).map((post, index) => {
-        const { slug, date, title, summary, tags } = post
+        const { slug, date, title, summary, tags, images } = post
         const decorativeImages = [
           '/static/images/ocean.jpeg',
           '/static/images/canada/lake.jpg',
@@ -46,6 +47,7 @@ const PostList: React.FC<PostListProps> = ({ posts, locale, maxDisplay }) => {
           '/static/images/canada/toronto.jpg',
         ]
         const imageIndex = index % decorativeImages.length
+        const cover = images?.[0]
         return (
           <motion.li
             key={slug}
@@ -86,10 +88,10 @@ const PostList: React.FC<PostListProps> = ({ posts, locale, maxDisplay }) => {
                       </div>
                       <div className="relative h-24 w-32 flex-shrink-0 md:h-20 md:w-28">
                         <Image
-                          src={decorativeImages[imageIndex]}
-                          alt="Decorative image"
+                          src={cover ?? decorativeImages[imageIndex]}
+                          alt={cover ? title : 'Decorative image'}
                           fill
-                          className="rounded-lg object-cover"
+                          className={`rounded-lg object-cover ${cover ? 'object-left' : ''}`}
                         />
                       </div>
                     </div>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520">
+  <rect width="1200" height="520" rx="16" fill="#f8fafc"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="60" y="58" font-size="28" font-weight="700" fill="#0f172a">One workday, two clocks (example)</text>
+    <text x="60" y="92" font-size="18" fill="#475569">Maputo (UTC+2) is 5 hours ahead of Brasília (UTC−3). Same instant, vertically aligned.</text>
+
+    <!-- scale: 06:00..24:00 Maputo => x 200..1140, 52.2px per hour -->
+    <g font-size="17" fill="#0f172a">
+      <text x="60" y="170" font-weight="600">Maputo</text>
+      <text x="60" y="330" font-weight="600">Brasília</text>
+    </g>
+
+    <!-- bands -->
+    <rect x="304" y="120" width="261" height="90" rx="8" fill="#16a34a"/>
+    <text x="434" y="160" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">Deep work</text>
+    <text x="434" y="185" text-anchor="middle" font-size="15" fill="#dcfce7">Brazil is still asleep</text>
+
+    <rect x="617" y="120" width="209" height="90" rx="8" fill="#0ea5e9"/>
+    <text x="721" y="160" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">Overlap</text>
+    <text x="721" y="185" text-anchor="middle" font-size="15" fill="#e0f2fe">syncs, reviews, pairing</text>
+
+    <rect x="826" y="120" width="261" height="90" rx="8" fill="#f59e0b"/>
+    <text x="956" y="160" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">Late calls</text>
+    <text x="956" y="185" text-anchor="middle" font-size="15" fill="#fef3c7">the expensive zone</text>
+
+    <rect x="617" y="280" width="470" height="90" rx="8" fill="#e2e8f0" stroke="#94a3b8" stroke-dasharray="6 5"/>
+    <text x="852" y="330" text-anchor="middle" font-size="18" font-weight="600" fill="#334155">Brazilian business hours (09:00–18:00)</text>
+
+    <!-- axes -->
+    <line x1="200" y1="230" x2="1140" y2="230" stroke="#94a3b8" stroke-width="2"/>
+    <line x1="200" y1="390" x2="1140" y2="390" stroke="#94a3b8" stroke-width="2"/>
+    <g font-size="15" fill="#475569" text-anchor="middle">
+      <text x="200" y="256">06:00</text><text x="304" y="256">08:00</text><text x="409" y="256">10:00</text>
+      <text x="513" y="256">12:00</text><text x="617" y="256">14:00</text><text x="722" y="256">16:00</text>
+      <text x="826" y="256">18:00</text><text x="930" y="256">20:00</text><text x="1035" y="256">22:00</text>
+      <text x="1140" y="256">24:00</text>
+      <text x="200" y="416">01:00</text><text x="304" y="416">03:00</text><text x="409" y="416">05:00</text>
+      <text x="513" y="416">07:00</text><text x="617" y="416">09:00</text><text x="722" y="416">11:00</text>
+      <text x="826" y="416">13:00</text><text x="930" y="416">15:00</text><text x="1035" y="416">17:00</text>
+      <text x="1140" y="416">19:00</text>
+    </g>
+
+    <line x1="826" y1="110" x2="826" y2="400" stroke="#dc2626" stroke-width="2" stroke-dasharray="4 4"/>
+    <text x="836" y="470" font-size="16" fill="#b91c1c">A 13:00 call in Brazil starts at 18:00 in Maputo</text>
+    <text x="60" y="470" font-size="16" fill="#475569">Hours are illustrative.</text>
+  </g>
+</svg>
