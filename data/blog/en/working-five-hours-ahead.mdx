@@ -1,0 +1,150 @@
+---
+title: 'Working 5 Hours Ahead: How I Turned a Time Zone Gap into a Productivity Superpower'
+date: '2026-10-21'
+language: en
+tags: ['remote-work', 'productivity', 'async-communication', 'career']
+authors: ['ergito-vilanculos']
+draft: false
+featured: false
+summary: 'Working from Maputo with teams in Brazil means my day starts five hours earlier. Here is how that time zone gap became a deep work window, what it costs at the end of the day, and the async habits that make it work.'
+images: ['/static/images/blog/working-five-hours-ahead/cover.png']
+layout: PostLayout
+bibliography: references-data.bib
+---
+
+When my laptop opens in Maputo, most of my team in Brazil is still asleep. No Slack pings, no standups, no "got a minute?".
+
+For a long time I treated that gap as a coordination problem to be minimized. It took me a while to see it the other way around: **a five-hour head start is one of the best productivity tools I have**, as long as I am deliberate about what each part of the day is for.
+
+This post is about that shift: the quiet mornings, the late meetings that come with them, and the asynchronous habits that hold everything together.
+
+## The Math of Five Hours
+
+Mozambique runs on **UTC+2** all year. Brasília runs on **UTC−3**, and Brazil has not observed daylight saving time since 2019. That makes the gap a stable **five hours**, every day of the year.
+
+| Maputo (UTC+2) | Brasília (UTC−3) | What it means                     |
+| -------------- | ---------------- | --------------------------------- |
+| 08:00          | 03:00            | My day starts; the team is asleep |
+| 13:00          | 08:00            | Brazil starts waking up           |
+| 14:00          | 09:00            | Brazilian business day begins     |
+| 18:00          | 13:00            | My evening; their early afternoon |
+| 23:00          | 18:00            | Their day ends                    |
+
+![Timeline comparing a workday in Maputo and Brasília: a deep work block in the Maputo morning while Brazil sleeps, an overlap window in the afternoon, and late calls in the Maputo evening](/static/images/blog/working-five-hours-ahead/timezone-overlap.svg)
+
+The shape of the day falls straight out of this table. There are three distinct zones, and each one deserves a different kind of work:
+
+1. **The quiet zone** — my morning, their night.
+2. **The overlap** — my afternoon, their morning.
+3. **The expensive zone** — my evening, their afternoon.
+
+The mistake is to treat all three the same.
+
+## Morning: A Deep Work Window Built into the Calendar
+
+Cal Newport defines **deep work** as professional activity performed in a state of distraction-free concentration that pushes your cognitive capabilities to their limit [@Newport2016]. Most knowledge workers have to fight for it: blocking calendars, muting channels, negotiating "focus days".
+
+Working five hours ahead, I get that protection by default. Nobody is going to schedule a meeting at 04:00 in São Paulo.
+
+Paul Graham describes the tension between the **maker's schedule** and the **manager's schedule**: a single meeting in the middle of a maker's afternoon can break it into pieces too small to do anything hard [@Graham2009]. The morning gap is a maker's schedule that nobody can fragment.
+
+### What belongs in the morning
+
+Not all work deserves the quiet zone. I reserve it for tasks where interruptions are most expensive:
+
+- **Designing and coding the hardest piece** of the current task.
+- **Investigating production issues** that need a long chain of reasoning.
+- **Writing**: design docs, ADRs, pull request descriptions that actually explain the "why".
+- **Reviewing complex pull requests** with full attention instead of between calls.
+
+What does _not_ belong there: inbox triage, chat catch-up, and status updates. Those can wait for the overlap, when answers come back in minutes instead of hours.
+
+> [!TIP]
+> Decide the night before what the morning is for. If you open the laptop and start by reading messages, the quiet zone is gone before you notice it.
+
+### Protecting the window
+
+The time zone gives you the window. It does not defend it for you. A few rules help:
+
+- **Notifications off until the overlap.** If something is truly urgent, there should be an on-call path that does not depend on chat.
+- **Start with output, not input.** Write code or a document before reading anything new.
+- **Leave a clean stopping point.** End the morning block with a written summary of where things are (more on that below), so the afternoon starts with context instead of recovery.
+
+## The Price: Meetings at the End of the Day
+
+The same gap that gives me quiet mornings pushes collaboration to the second half of my day. A 13:00 meeting in Brazil, perfectly reasonable for the team, starts at **18:00 in Maputo**. A 16:00 retro ends after 21:00 for me.
+
+This is the part people tend to underestimate. The cost is not only the late hour:
+
+- **Energy mismatch.** The team is in its most productive afternoon stretch; I am at the end of a long day. That is exactly when I should be at my sharpest for design discussions, and when I am not.
+- **The day gets longer, not shifted.** If mornings are for deep work and evenings are for meetings, the workday quietly stretches across both.
+- **Context switching late in the day.** Deciding things at 20:00 and then trying to switch off is harder than it sounds.
+
+> [!WARNING]
+> If you start early for deep work **and** stay late for meetings, you are not using the time zone. You are paying for it twice. Something has to give, and it should be a deliberate choice, not a slow drift.
+
+### What actually helps
+
+- **Negotiate a meeting window.** Make the overlap explicit: "Recurring meetings work best for me between 09:00 and 13:00 Brasília time." Most teams are happy to adapt once the constraint is visible.
+- **Put recurring ceremonies in the overlap.** Standups, plannings and refinements are predictable. They should be the first things moved into the shared morning.
+- **Keep a late-call budget.** Some late calls are unavoidable: a client available only at the end of the day, an incident. Accept them, but count them, and compensate by starting later the next day.
+- **Ask "does this need to be a meeting?"** Often it does not, and that is where asynchronous communication comes in.
+
+## Async Communication: The Glue Between Time Zones
+
+With five hours between us, asynchronous communication is not a nice-to-have. It is the main channel, and meetings are the exception.
+
+It is a familiar idea for anyone who builds distributed systems. In an [event-driven architecture](/blog/event-driven-architecture), services do not block waiting for each other; they publish what happened, with enough context for consumers to act on their own. Good async communication works the same way. The message has to stand on its own, because the reader is not there to ask follow-up questions in real time.
+
+![The async handoff loop: deep work in the Maputo morning, a written update, the team reading and answering in the Brazilian morning, and a short sync in the overlap only for what async could not settle](/static/images/blog/working-five-hours-ahead/async-handoff.svg)
+
+### The written update
+
+The most valuable habit I have is ending each deep work block with a written update. It turns the team's morning into a review of real progress instead of a status meeting. A simple structure:
+
+```markdown
+**Context:** Migrating the order events to the new topic (ticket ORD-142).
+**Done:** Producer publishes to both topics; consumers read from the old one.
+**Decision needed:** Can we switch consumers to the new topic today?
+**Default:** If there are no objections by 15:00 (Brasília), I will switch them
+in staging and keep the old topic for one week.
+**Blockers:** None.
+```
+
+Two lines in that template do most of the work:
+
+- **Decision needed** tells the reader exactly what you want from them. A message without an ask gets a 👍 and nothing else.
+- **Default** keeps you unblocked. If nobody answers, work still moves, and anyone who disagrees knows the deadline to say so.
+
+### Principles that make async work
+
+- **Over-communicate context.** Link the ticket, the PR, the dashboard. Assume the reader is switching in from something else, because they are.
+- **One topic per thread.** Mixed threads are impossible to resume five hours later.
+- **Write decisions down where they will be found.** A decision that lives only in a call is lost for everyone who was not there, including you in three months.
+- **Make it easy to answer with one line.** Yes/no questions and explicit options beat open-ended "thoughts?".
+- **Respect the reader's quiet zone too.** Do not expect instant answers in their early morning, the same way you protect yours.
+
+## The Trade-Offs, Honestly
+
+| Advantage                                           | Cost                                                       |
+| --------------------------------------------------- | ---------------------------------------------------------- |
+| Uninterrupted mornings for deep work                | Meetings drift into your evening                           |
+| Natural pressure to write things down               | Writing well takes time and practice                       |
+| Progress is ready for review when the team wakes up | Blockers found in the morning may wait hours for an answer |
+| Clear boundaries between focus and collaboration    | Boundaries only hold if you defend them                    |
+
+None of these costs is a reason to avoid working across time zones. They are reasons to design the day on purpose.
+
+## Takeaways
+
+- [ ] Map your day into **quiet zone, overlap and expensive zone**, and assign work to each one.
+- [ ] Protect the morning: **notifications off, output first**.
+- [ ] Make your **meeting window explicit** and move recurring ceremonies into the overlap.
+- [ ] Keep a **late-call budget** and compensate when you go over it.
+- [ ] End every deep work block with a **written update that has an ask and a default**.
+
+A five-hour gap can feel like friction. Treated deliberately, it is a schedule that gives you focus by default and forces your team to communicate better. That is not a constraint to work around. It is a superpower to use on purpose.
+
+## References
+
+[^ref]

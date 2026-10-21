@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0f172a"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="80" y="150" font-size="26" letter-spacing="4" fill="#22c55e" font-weight="600">REMOTE WORK · PRODUCTIVITY</text>
+    <text x="80" y="250" font-size="76" font-weight="700" fill="#f8fafc">Working 5 Hours</text>
+    <text x="80" y="340" font-size="76" font-weight="700" fill="#f8fafc">Ahead</text>
+    <text x="80" y="410" font-size="30" fill="#94a3b8">Turning a time zone into a focus advantage</text>
+
+    <g transform="translate(840 300)">
+      <circle r="120" fill="none" stroke="#16a34a" stroke-width="6"/>
+      <g stroke="#334155" stroke-width="4">
+        <line x1="0" y1="-108" x2="0" y2="-94"/>
+        <line x1="108" y1="0" x2="94" y2="0"/>
+        <line x1="0" y1="108" x2="0" y2="94"/>
+        <line x1="-108" y1="0" x2="-94" y2="0"/>
+      </g>
+      <line x1="0" y1="0" x2="0" y2="-80" stroke="#f8fafc" stroke-width="8" stroke-linecap="round" transform="rotate(270)"/>
+      <line x1="0" y1="0" x2="0" y2="-100" stroke="#f8fafc" stroke-width="5" stroke-linecap="round"/>
+      <circle r="9" fill="#22c55e"/>
+      <text y="170" text-anchor="middle" font-size="26" font-weight="600" fill="#f8fafc">Maputo 09:00</text>
+    </g>
+
+    <g transform="translate(1060 220)">
+      <circle r="62" fill="none" stroke="#475569" stroke-width="4"/>
+      <line x1="0" y1="0" x2="0" y2="-40" stroke="#94a3b8" stroke-width="6" stroke-linecap="round" transform="rotate(120)"/>
+      <line x1="0" y1="0" x2="0" y2="-52" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
+      <circle r="6" fill="#94a3b8"/>
+      <text y="100" text-anchor="middle" font-size="22" fill="#94a3b8">Brasília 04:00</text>
+    </g>
+
+    <text x="1060" y="370" text-anchor="middle" font-size="24" font-weight="700" fill="#22c55e">Maputo +5h</text>
+
+    <rect x="80" y="480" width="420" height="10" rx="5" fill="#1e293b"/>
+    <rect x="80" y="480" width="190" height="10" rx="5" fill="#16a34a"/>
+    <text x="80" y="530" font-size="22" fill="#94a3b8">Deep work first. Meetings later.</text>
+  </g>
+</svg>
