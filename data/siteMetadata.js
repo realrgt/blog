@@ -9,7 +9,7 @@ const siteMetadata = {
   siteUrl: 'https://realrgt.web.app',
   siteRepo: 'https://github.com/realrgt/realrgt',
   siteLogo: '/static/images/logo.png',
-  socialBanner: '/static/images/twitter-card.png',
+  socialBanner: '/static/images/logo.png',
   mastodon: '',
   email: 'ergitorubildo@gmail.com',
   github: 'https://github.com/realrgt',
