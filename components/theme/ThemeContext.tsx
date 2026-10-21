@@ -29,13 +29,30 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         ? Theme.DARK
         : Theme.LIGHT
       setResolvedTheme(systemTheme)
-      document.documentElement.classList.toggle('dark', systemTheme === Theme.DARK)
     } else {
       setResolvedTheme(newTheme)
-      document.documentElement.classList.toggle('dark', newTheme === Theme.DARK)
     }
     localStorage.setItem('theme', newTheme)
   }, [])
+
+  // Switching locale re-renders the root layout's <html> and React drops the
+  // `dark` class, so it has to be restored whenever it goes out of sync.
+  useEffect(() => {
+    if (!mounted) return
+
+    const root = document.documentElement
+    const syncDarkClass = () => {
+      const isDark = resolvedTheme === Theme.DARK
+      if (root.classList.contains('dark') !== isDark) {
+        root.classList.toggle('dark', isDark)
+      }
+    }
+
+    syncDarkClass()
+    const observer = new MutationObserver(syncDarkClass)
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [mounted, resolvedTheme])
 
   useEffect(() => {
     if (isInitialMount.current) {

@@ -5,7 +5,6 @@ import { EyeIcon } from '@heroicons/react/24/outline'
 
 interface BlogStatsProps {
   slug: string
-  locale: string
   className?: string
   showLabels?: boolean
 }
@@ -14,26 +13,30 @@ interface StatsData {
   views: number
 }
 
-export default function BlogStats({
-  slug,
-  locale,
-  className = '',
-  showLabels = true,
-}: BlogStatsProps) {
+function markViewedInSession(slug: string): boolean {
+  const key = `blog-viewed:${slug}`
+  try {
+    if (sessionStorage.getItem(key)) return false
+    sessionStorage.setItem(key, '1')
+  } catch {
+    // Without storage the view is still counted, just not deduplicated.
+  }
+  return true
+}
+
+export default function BlogStats({ slug, className = '', showLabels = true }: BlogStatsProps) {
   const [stats, setStats] = useState<StatsData>({ views: 0 })
   const [isLoading, setIsLoading] = useState(true)
 
-  // Fetch initial stats and record view
   useEffect(() => {
     const fetchStatsAndRecordView = async () => {
       try {
-        // First, record the view
-        await fetch(`/api/blog/${encodeURIComponent(slug)}/view`, {
-          method: 'POST',
-        })
-
-        // Then fetch the updated stats
-        const response = await fetch(`/api/blog/${encodeURIComponent(slug)}/stats`)
+        const encodedSlug = encodeURIComponent(slug)
+        // Both translations share the slug, so one view per session covers
+        // language switches, reloads and Strict Mode's double effect.
+        const response = markViewedInSession(slug)
+          ? await fetch(`/api/blog/${encodedSlug}/view`, { method: 'POST' })
+          : await fetch(`/api/blog/${encodedSlug}/stats`)
         if (response.ok) {
           const data = await response.json()
           setStats(data)
@@ -46,7 +49,7 @@ export default function BlogStats({
     }
 
     fetchStatsAndRecordView()
-  }, [slug, locale])
+  }, [slug])
 
   if (isLoading) {
     return (

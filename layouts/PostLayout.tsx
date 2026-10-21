@@ -89,7 +89,7 @@ export default async function PostLayout({
             </div>
             {/* Blog Stats (Likes & Views) */}
             <div className="flex justify-center py-6">
-              <BlogStats slug={slug} locale={locale} />
+              <BlogStats slug={slug} />
             </div>
           </header>
           <div className="grid-rows-[auto_1fr] pb-8 xl:grid xl:grid-cols-4 xl:gap-x-6">
