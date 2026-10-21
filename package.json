@@ -44,7 +44,6 @@
     "react-i18next": "^15.2.0",
     "react-spring": "^9.7.5",
     "reading-time": "^1.5.0",
-    "redis": "^5.8.2",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-citation": "^2.2.2",
     "rehype-katex": "^7.0.1",
