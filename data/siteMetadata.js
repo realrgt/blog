@@ -6,7 +6,7 @@ const siteMetadata = {
   description: 'Backend Engineer with 7+ years of experience designing and building scalable backend systems, distributed architectures, and cloud-native applications.',
   language: 'en',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://realrgt.web.app',
+  siteUrl: 'https://ergito.vercel.app',
   siteRepo: 'https://github.com/realrgt/realrgt',
   siteLogo: '/static/images/logo.png',
   socialBanner: '/static/images/logo.png',
@@ -38,10 +38,14 @@ const siteMetadata = {
     // posthogAnalytics: {
     //   posthogProjectApiKey: '', // e.g. 123e4567-e89b-12d3-a456-426614174000
     // },
-    // googleAnalytics: {
-    //   googleAnalyticsId: '', // e.g. G-XXXXXXX
-    // },
+    // pliny renders the tag whenever the key exists, so it is omitted without an ID.
+    ...(process.env.NEXT_PUBLIC_GA_ID && {
+      googleAnalytics: {
+        googleAnalyticsId: process.env.NEXT_PUBLIC_GA_ID,
+      },
+    }),
   },
+  googleSiteVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
   newsletter: {
     // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus
     // Please add your .env file and modify it according to your selection
