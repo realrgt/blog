@@ -1,0 +1,207 @@
+---
+title: 'From Junior to Senior: How My Approach to Complex Problems Changed'
+date: '2026-10-22'
+language: en
+tags: ['career', 'software-design', 'architecture', 'system-design']
+authors: ['ergito-vilanculos']
+draft: false
+featured: false
+summary: 'Seven years in, the biggest change in how I work is not the languages or the tools. It is the shift from writing code fast to designing systems that last, and the questions I now ask before writing a single line.'
+images: ['/static/images/blog/junior-to-senior-complex-problems/cover.png']
+layout: PostLayout
+bibliography: references-data.bib
+---
+
+Early in my career, a good day was a day with a lot of code shipped. Tickets moved to "Done", pull requests merged, features live.
+
+Seven years later, a good day looks very different. Sometimes the most valuable thing I do is **not** write code: it is asking the question that makes half of the planned work unnecessary.
+
+This post is about that transition, from writing code fast to designing systems that last, and what actually changed in the way I approach complex problems.
+
+## The Road So Far
+
+Seniority is not a title you receive on a specific date. It is the sum of contexts that force you to think beyond the code in front of you. Looking back, each stage of my path pushed that boundary a little further.
+
+| Period    | Context                                                                                                                                 | What it pushed me to learn                                              |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| 2019      | Internship at PROJENITY: technical support, network infrastructure, first software projects                                             | Systems fail in the real world, and someone has to understand why       |
+| 2020–2021 | Co-founded Leeva Studio: marketplace and urban mobility products for the Mozambican market, with M-Pesa and e-Mola payment integrations | When it is your product, every shortcut comes back to you               |
+| 2020–2021 | Handza: a laboratory management app, built with Clean Architecture, SOLID and TDD                                                       | Structure is what lets you keep delivering fast after the first release |
+| 2021–2022 | N26: backend APIs in Java with Spring Boot and in Node.js with TypeScript, CI/CD improvements, architecture discussions                 | Reliability is designed in, not added later                             |
+| 2022–2026 | Raízen: backend services for more than 10 million users, event-driven integrations on AWS                                               | At scale, every design decision has a radius far bigger than the code   |
+
+None of these jobs came with a manual on "how to think like a senior". The lessons came from the problems themselves.
+
+## Coding Fast Is Not the Problem
+
+Let me be clear about something: **writing code fast is a skill**, not a flaw. Every good senior engineer I know can still deliver quickly when it matters.
+
+The problem is when speed becomes the only measure. John Ousterhout calls this **tactical programming**: the main goal is to get something working, and each shortcut looks harmless in isolation [@Ousterhout2018]. Accumulated over months, those shortcuts become the complexity that slows everyone down.
+
+He also describes the **tactical tornado**: the prolific engineer who ships features faster than anyone, and leaves behind a wake of code that others have to untangle. Management often sees a hero. The team sees the cleanup.
+
+The alternative is **strategic programming**: working code is not enough; the goal is a good design that also works. That shift sounds subtle. In practice, it changes almost everything.
+
+## The Radius of a Decision
+
+The clearest way I have found to describe the difference is the **radius** of a decision: how far you look before writing the code.
+
+![Concentric circles showing the radius of a decision: function, feature, system, and organization and time; coding fast asks whether it works, designing systems also asks who depends on it, how it fails, who maintains it and what it costs to change](/static/images/blog/junior-to-senior-complex-problems/scope-of-thinking.svg)
+
+The code itself is often the same size. What grows is the set of questions you ask:
+
+- **Who else depends on this?** Other services, other teams, the data downstream.
+- **What fails, and how will we know?** Timeouts, retries, partial failures, silent errors.
+- **Who maintains this in a year?** Probably not you, and certainly not with today's context in their head.
+- **What does it cost to change later?** Some decisions are cheap to reverse. Others are not.
+
+## What Actually Changed
+
+### 1. From the solution to the problem
+
+As a junior, I received a solution and implemented it. As a senior, the first job is to understand the problem well enough to question the solution.
+
+A concrete example: at Raízen, we reduced an API's latency **from 60 seconds to 750 milliseconds**. Optimizing database queries was part of it, the obvious path. The other part started with a different question: **does the user actually need to wait for all of this to finish?**
+
+The answer was no. Converting critical synchronous flows into asynchronous operations changed the problem completely. Here is the shape of that change, simplified and illustrative, not the original code:
+
+```typescript:src/reports/routes.ts
+// Before: the request waits for the heavy work to finish
+app.post('/reports', async (req, res) => {
+  const report = await generateReport(req.body)
+  res.json(report)
+})
+```
+
+```typescript:src/reports/routes.ts {8-16}
+import { randomUUID } from 'node:crypto'
+import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs'
+
+const sqs = new SQSClient({})
+
+// After: accept the request, enqueue the work, answer immediately
+app.post('/reports', async (req, res) => {
+  const jobId = randomUUID()
+  await jobs.create({ id: jobId, status: 'pending' })
+  await sqs.send(
+    new SendMessageCommand({
+      QueueUrl: process.env.REPORTS_QUEUE_URL,
+      MessageBody: JSON.stringify({ jobId, filters: req.body }),
+    })
+  )
+  res.status(202).json({ jobId, statusUrl: `/reports/${jobId}` })
+})
+```
+
+```typescript:src/reports/worker.ts
+export async function handleReportMessage(body: string): Promise<void> {
+  const { jobId, filters } = JSON.parse(body) as { jobId: string; filters: ReportFilters }
+
+  const job = await jobs.find(jobId)
+  // SQS delivers at least once, so the same message can arrive twice
+  if (!job || job.status === 'done') return
+
+  const report = await generateReport(filters)
+  await jobs.complete(jobId, report)
+}
+```
+
+The code is not sophisticated. The value was in reframing the problem before touching it.
+
+> [!TIP]
+> Before optimizing something, ask whether it needs to happen **now**, **here**, and **for this user**. Many "performance problems" are really design problems in disguise.
+
+### 2. From "best practices" to trade-offs
+
+Juniors often look for the right answer. Seniors look for the **least bad option for this context**.
+
+Mark Richards and Neal Ford put it bluntly in their first law of software architecture: everything in software architecture is a trade-off [@RichardsFord2020]. The async change above is a good example. It solved latency, and it introduced new costs:
+
+| We gained                               | We paid with                                              |
+| --------------------------------------- | --------------------------------------------------------- |
+| Fast responses, no more 60-second waits | Eventual consistency: the result is not ready immediately |
+| Independent scaling of the heavy work   | A queue, a worker and job state to operate                |
+| Resilience: failures can be retried     | Idempotency: the same message may be processed twice      |
+| Freedom to process at our own pace      | Harder debugging across asynchronous boundaries           |
+
+If you cannot list what a decision costs, you have not finished making it.
+
+### 3. From working code to operable systems
+
+"It works on my machine" becomes "it works in production". Then it becomes "**we will know quickly when it stops working**".
+
+At N26, part of my work was improving deployment reliability with CloudWatch alarms that triggered alerts in Microsoft Teams through webhooks. At Raízen, observability with New Relic, Kinesis and CloudWatch was part of how we improved system reliability and **reduced production incidents by 79%**.
+
+Neither of those was feature work. Both made the systems safer to run and to change. Today, my definition of done includes questions I would never have asked as a junior:
+
+- [ ] Can I tell, from a dashboard, whether this feature is healthy?
+- [ ] Is there an alert for the failure that would hurt users most?
+- [ ] Are logs structured and correlated across services?
+- [ ] Do retries have limits, and do failed messages go somewhere visible?
+- [ ] Does someone other than me know how to operate this?
+
+### 4. From decisions in heads to decisions in writing
+
+As a junior, the "why" behind the code lived in my head, or in a call nobody recorded. That works until the person with the context leaves, or until you forget.
+
+Michael Nygard proposed **Architecture Decision Records (ADRs)**: short documents with a title, the context, the decision, its status and its consequences [@Nygard2011]. They are one of the cheapest tools with the highest return I know. Here is what an ADR for the change above could look like:
+
+```markdown:docs/adr/0007-async-report-generation.md
+# 7. Generate reports asynchronously
+
+**Status:** Accepted
+
+**Context:** Report generation takes up to 60 s and runs inside the HTTP
+request. Clients time out and retry, multiplying the load.
+
+**Decision:** Accept the request, enqueue a job in SQS and process it in a
+worker. Clients poll the job status.
+
+**Consequences:** Responses become fast. Results are eventually consistent.
+Workers must be idempotent. We need monitoring for queue depth and failures.
+```
+
+Notice that the consequences section repeats the trade-off table. That is on purpose. **Writing a decision down is how you prove to yourself that you understood it.**
+
+### 5. From big rewrites to incremental change
+
+The junior instinct with a messy system is to rewrite it. The senior instinct is to change it **one safe step at a time**.
+
+At Raízen, I contributed to the migration of the campaign module out of the monolith, building a dedicated micro-frontend and a BFF (Backend-for-Frontend). The scope matters: one module, with clear boundaries, not "rewrite the platform". That is how you reduce risk while still moving the architecture forward.
+
+The same principle shows up in [event-driven architecture](/blog/event-driven-architecture): small, decoupled pieces that can evolve independently are easier to change than one big piece that has to change all at once.
+
+## Two Ways to Attack the Same Problem
+
+Put together, the difference looks like this:
+
+![Two flows side by side: coding fast goes from reading the ticket to writing code, shipping and discovering the problem in production, then looping through hotfixes; designing systems goes from understanding the problem to mapping constraints, comparing options, deciding and writing it down, shipping small increments, and observing and learning](/static/images/blog/junior-to-senior-complex-problems/problem-approach.svg)
+
+The first path is faster on day one. The second is faster by month three, and much faster by year two.
+
+> [!IMPORTANT]
+> Designing first does not mean designing forever. Most decisions deserve minutes or hours, not weeks. The skill is knowing which decisions are expensive to reverse, and spending your thinking time there.
+
+## If You Are Early in Your Career
+
+You do not need a senior title to start practicing this. A few habits that compound:
+
+1. **Ask "why" before "how".** Understand the problem the ticket is trying to solve, not only the solution it describes.
+2. **Write down one trade-off per decision.** Even in a pull request description. Especially there.
+3. **Read the code around yours.** Understanding the system is how the radius of your decisions grows.
+4. **Follow your code into production.** Look at the logs, the metrics, the incidents. Production is the best teacher you will ever have.
+5. **Prefer small, reversible steps.** Big changes feel productive. Small ones actually ship.
+
+## Takeaways
+
+- **Coding fast is a skill.** Making speed the only measure is the trap.
+- **Seniority is the radius of your decisions**, not the complexity of your code.
+- **Every decision is a trade-off.** If you cannot name the cost, keep thinking.
+- **Operability is part of the design**, not something you add after the incident.
+- **Write decisions down.** Your future self and your team will thank you.
+
+Seven years in, I still write a lot of code. I just ask better questions before I do.
+
+## References
+
+[^ref]
