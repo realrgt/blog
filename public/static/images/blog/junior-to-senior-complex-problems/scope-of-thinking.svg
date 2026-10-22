@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
+  <rect width="1200" height="560" rx="16" fill="#f8fafc"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="60" y="58" font-size="28" font-weight="700" fill="#0f172a">The radius of a decision</text>
+    <text x="60" y="92" font-size="18" fill="#475569">The code is the same size. What grows is how far you look before writing it.</text>
+
+    <g transform="translate(380 330)">
+      <circle r="210" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+      <circle r="155" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>
+      <circle r="100" fill="#86efac" stroke="#16a34a" stroke-width="2"/>
+      <circle r="48" fill="#16a34a"/>
+      <g text-anchor="middle" font-weight="600">
+        <text y="7" font-size="18" fill="#ffffff">Function</text>
+        <text y="-68" font-size="18" fill="#14532d">Feature</text>
+        <text y="-122" font-size="18" fill="#14532d">System</text>
+        <text y="-178" font-size="18" fill="#14532d">Organization &amp; time</text>
+      </g>
+    </g>
+
+    <g font-size="18">
+      <line x1="440" y1="330" x2="660" y2="190" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5 5"/>
+      <rect x="660" y="150" width="480" height="96" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+      <text x="684" y="186" font-weight="700" fill="#0f172a">Coding fast asks</text>
+      <text x="684" y="218" fill="#334155">Does it work? Is the ticket closed?</text>
+
+      <line x1="560" y1="420" x2="660" y2="370" stroke="#16a34a" stroke-width="2" stroke-dasharray="5 5"/>
+      <rect x="660" y="300" width="480" height="150" rx="12" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
+      <text x="684" y="336" font-weight="700" fill="#0f172a">Designing systems also asks</text>
+      <text x="684" y="368" fill="#334155">Who else depends on this? What fails, and</text>
+      <text x="684" y="394" fill="#334155">how will we know? Who maintains it in a year?</text>
+      <text x="684" y="420" fill="#334155">What does it cost to change later?</text>
+    </g>
+  </g>
+</svg>
