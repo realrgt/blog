@@ -4,11 +4,13 @@ import toast from 'react-hot-toast'
 import { useParams } from 'next/navigation'
 import { LocaleTypes } from 'app/[locale]/i18n/settings'
 import { useTranslation } from 'app/[locale]/i18n/client'
+import siteMetadata from '@/data/siteMetadata'
 
 export const useContactForm = () => {
   const locale = useParams()?.locale as LocaleTypes
   const { t } = useTranslation(locale, 'common')
-  const [state, handleSubmit, reset] = useForm('xdojkndq')
+  // useForm throws without a key; the form is never shown when siteMetadata.formspree is false.
+  const [state, handleSubmit, reset] = useForm(siteMetadata.formspreeFormId || 'unset')
   const [name, setName] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [message, setMessage] = useState<string>('')

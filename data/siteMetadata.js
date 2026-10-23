@@ -96,10 +96,9 @@ const siteMetadata = {
     //   indexName: 'docsearch',
     // },
   },
-  // formspree support :
-  //if set to false, simple "mailto"
-  // if set to true, get a free account there : https://formspree.io/ and go to read.me doc
-  formspree: true,
+  // Without a Formspree form ID the contact buttons fall back to a plain "mailto".
+  formspree: Boolean(process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID),
+  formspreeFormId: process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID,
   // waline support
   iswaline: false,
   walineServer: '',
