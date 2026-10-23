@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
+  <rect width="1200" height="560" rx="16" fill="#f8fafc"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="60" y="58" font-size="28" font-weight="700" fill="#0f172a">A sense of scale</text>
+    <text x="60" y="92" font-size="18" fill="#475569">Bars to scale (millions). A single Brazilian app can reach more people than half of Mozambique.</text>
+
+    <!-- scale: 1M = 3.6px, max 213M = 767px, x0 = 300 -->
+    <g font-size="18">
+      <text x="60" y="160" font-weight="600" fill="#0f172a">Brazil</text>
+      <text x="60" y="182" font-size="14" fill="#64748b">population, 2025</text>
+      <rect x="300" y="140" width="767" height="44" rx="6" fill="#16a34a"/>
+      <text x="1080" y="169" font-weight="700" fill="#0f172a">~213M</text>
+
+      <text x="60" y="250" font-weight="600" fill="#0f172a">Mozambique</text>
+      <text x="60" y="272" font-size="14" fill="#64748b">population, 2025</text>
+      <rect x="300" y="230" width="122" height="44" rx="6" fill="#0ea5e9"/>
+      <text x="436" y="259" font-weight="700" fill="#0f172a">~34M</text>
+
+      <text x="60" y="340" font-weight="600" fill="#0f172a">One app</text>
+      <text x="60" y="362" font-size="14" fill="#64748b">monthly active users</text>
+      <rect x="300" y="320" width="72" height="44" rx="6" fill="#f59e0b"/>
+      <text x="386" y="349" font-weight="700" fill="#0f172a">20M+</text>
+    </g>
+
+    <line x1="40" y1="410" x2="1160" y2="410" stroke="#e2e8f0" stroke-width="2"/>
+
+    <g font-size="18">
+      <rect x="60" y="440" width="1080" height="84" rx="12" fill="#ffffff" stroke="#16a34a" stroke-width="2"/>
+      <text x="90" y="476" font-weight="700" fill="#0f172a">313.3 million Pix transactions in a single day</text>
+      <text x="90" y="504" fill="#475569">December 5, 2025 — Brazil's instant payment system, available 24/7 since November 2020</text>
+    </g>
+  </g>
+</svg>
