@@ -10,6 +10,7 @@ export enum Theme {
 
 interface ThemeContextProps {
   theme: Theme
+  resolvedTheme: Theme.LIGHT | Theme.DARK
   setTheme: (theme: Theme) => void
   mounted: boolean
 }
@@ -79,7 +80,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [theme, updateTheme])
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme: updateTheme, mounted }}>
+    <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme: updateTheme, mounted }}>
       {children}
     </ThemeContext.Provider>
   )
