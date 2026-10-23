@@ -1,0 +1,133 @@
+---
+title: "From 'Alinhar' to 'Golaço': What Five Years of Remote Work Taught Me About Brazilian Corporate Culture"
+date: '2026-10-23'
+language: en
+tags: ['career', 'remote-work', 'culture', 'networking']
+authors: ['ergito-vilanculos']
+draft: false
+featured: false
+summary: 'Five years working remotely from Maputo with Brazilian teams taught me a new vocabulary, a relaxed way of talking that hides a demanding quality bar, and what it means to build software at the scale of a country with more than 200 million people.'
+images: ['/static/images/blog/brazilian-corporate-culture-remote/cover.png']
+layout: PostLayout
+bibliography: references-data.bib
+---
+
+From my first call with the CEO of a company I worked with, what I remember most is one sentence: **"puta golaço"**.
+
+For a second, I thought I had misheard. Where I came from, I would never expect a CEO to talk like that on a call. That moment was my real onboarding into Brazilian corporate culture.
+
+I have been working remotely from Maputo with Brazilian teams for five years now. This post is about what I learned along the way: the language, the culture behind it, the scale of the work, and how to build real relationships from about 8,000 kilometers away.
+
+## Informal on the Surface
+
+The first thing you notice in Brazilian tech teams is **how informal communication is**. Not in a careless way, in a human way.
+
+- **Hierarchy does not set the tone.** Interns, tech leads, directors and C-levels talk to each other in the same relaxed register, usually by first name.
+- **Humor is part of the job.** Jokes in the daily, memes in the team channel, emojis as a valid answer to a question.
+- **Football is a second language.** A great delivery is a _golaço_ (a stunning goal), and football metaphors show up in meetings all the time.
+
+About that CEO: _"puta golaço"_ is roughly "what a f\*\*\*ing great goal", the kind of thing you shout at a stadium. In that context, it simply meant something had gone very well. The startled one was me.
+
+> [!NOTE]
+> If you come from a more formal business culture, the informality can feel like a lack of seriousness. It is not. It is a sign of **psychological safety**: people speak openly because they are not afraid of the hierarchy.
+
+## Rigorous Underneath
+
+Here is the part that took me longer to understand: **the relaxed tone hides a very demanding environment.**
+
+![An iceberg showing Brazilian corporate culture: above the waterline, informal tone, jokes, football metaphors, emojis and first names; below, a rigid commitment to delivery quality, team spirit, competitive teams, mature engineering practices and the scale of millions of users](/static/images/blog/brazilian-corporate-culture-remote/culture-iceberg.svg)
+
+Under the jokes, I found:
+
+- **A rigid commitment to delivery quality.** Code reviews are thorough, acceptance criteria are taken seriously, and "it works on my machine" does not survive the first review.
+- **Real team spirit.** When something breaks in production, people show up, regardless of whose code it was. The problem belongs to the team.
+- **Competitive environments.** The market is large and full of talented engineers. You are expected to perform, to grow and to keep up with a fast pace.
+
+The lesson: **do not confuse informal with easy.** You can laugh in the daily and still be held to a very high standard at the pull request.
+
+## The Vocabulary Nobody Teaches You
+
+Brazilian tech teams have their own dialect: Portuguese mixed with English, with meanings you will not find in a dictionary. Some of the terms I use every day:
+
+| Term                    | Literally              | What it actually means                                                         |
+| ----------------------- | ---------------------- | ------------------------------------------------------------------------------ |
+| **Alinhar**             | to align               | To sync and agree on something. _"Vamos alinhar?"_ usually means a quick call. |
+| **Puxar uma task**      | to pull a task         | To pick up a ticket from the board and own it.                                 |
+| **Refinamento**         | refinement             | The backlog refinement ceremony, where stories get detailed and estimated.     |
+| **Subir para produção** | to go up to production | To deploy. _"Subiu?"_ means "is it live?".                                     |
+| **Daily**               | (English)              | The daily stand-up. Many ceremonies keep their English names.                  |
+| **Dar um toque**        | to give a touch        | To give someone a heads-up or a nudge.                                         |
+| **Quebrou**             | it broke               | Something failed, usually in production. Never a good word to read at night.   |
+| **Débito técnico**      | technical debit        | Technical debt.                                                                |
+| **Bora**                | let's go               | Agreement and energy at once: "let's do it".                                   |
+| **Golaço**              | a great goal           | An excellent result. The highest praise you can get.                           |
+
+> [!TIP]
+> When you do not understand a term, ask. Brazilians are generous about explaining their slang, and asking is often the start of a good conversation.
+
+### "Alinhar" deserves its own section
+
+If I had to pick one word that defines Brazilian corporate communication, it would be **alinhar**.
+
+It reflects a culture that values **consensus and relationships**. Before a decision, people want to make sure everyone is on the same page. For someone working five hours ahead, that has a cost: many "alignments" turn into calls at the end of my day. I wrote about how I deal with that in [Working 5 Hours Ahead](/blog/working-five-hours-ahead).
+
+My practical answer is to **align in writing first**. A clear message with context, the decision needed and a default often makes the call shorter, or unnecessary.
+
+## Building Software at the Scale of a Country
+
+The cultural lessons are only half of the story. The other half is **scale**.
+
+Brazil has about **213 million people** [@IBGE2025]. Mozambique has about **34 million** [@ClubMoz2025]. In Brazil, I worked on apps with more than **20 million monthly active users**: a single app reaching more people than half of my home country's population.
+
+![Bar chart to scale comparing Brazil's population of about 213 million, Mozambique's of about 34 million and one app with more than 20 million monthly active users, plus a highlight of 313.3 million Pix transactions in a single day on December 5, 2025](/static/images/blog/brazilian-corporate-culture-remote/scale-comparison.svg)
+
+At that scale, everything changes:
+
+- **Small percentages are huge numbers.** A 0.1% error rate can mean thousands of people affected.
+- **Peaks are brutal.** Paydays, Black Friday and campaign launches multiply traffic in minutes.
+- **Every incident is visible.** Users notice, social media notices, and the business feels it immediately.
+
+This is not a criticism of smaller markets. Mozambique has its own innovative ecosystem, especially in mobile money: I integrated M-Pesa and e-Mola payments at Leeva Studio, and those platforms solve real problems for millions of people. But the **transactional volume** of the Brazilian market is on a different order of magnitude, and working inside it reshaped how I think about reliability.
+
+## A Mature Financial and Payments Ecosystem
+
+Nothing illustrates Brazil's technological maturity better than its payments ecosystem.
+
+**Pix**, the instant payment system created by the Central Bank of Brazil, has been live since November 2020. It works 24/7, settles in seconds, and has become part of everyday life for individuals and businesses. On December 5, 2025, it processed **313.3 million transactions in a single day** [@SBTPix2025].
+
+For an engineer, integrating with an ecosystem like that teaches a lot:
+
+- **Instant means no second chances.** Money moves in seconds, so validations, limits and fraud checks have to happen before, not after.
+- **Idempotency is not optional.** Retries, duplicated callbacks and timeouts are normal, and a payment must never be processed twice.
+- **Regulation is part of the architecture.** Security, auditability and compliance requirements shape the design from day one.
+- **Observability is a business requirement.** When payments slow down, someone loses money, so you need to know before the user does.
+
+Working in this ecosystem showed me **how high the technical bar can be**, and how much competence exists in Brazilian engineering teams.
+
+## Networking from 8,000 Kilometers Away
+
+Working remotely, there is no coffee machine, no lunch with the team, no casual conversation in the hallway. Relationships do not happen by accident. **You have to build them on purpose.** What works for me:
+
+1. **Be present in written channels.** Answer questions, share what you learned, celebrate other people's deliveries. Visibility in remote work is built in writing.
+2. **Turn the camera on.** It sounds small, but people connect with faces. Informal cultures value that closeness.
+3. **Make room for small talk.** In Brazil, the first minutes of a call are often about football, the weekend or the weather. Do not rush them. That is where trust is built.
+4. **Offer help before you need it.** Pairing on someone's bug or reviewing a pull request carefully creates more connection than any networking event.
+5. **Share knowledge in public.** Internal talks, documentation and posts like this one make your work visible beyond your own team.
+6. **Keep in touch after the project ends.** A message on LinkedIn when someone changes jobs, or a congratulation on a promotion, keeps relationships alive.
+
+> [!IMPORTANT]
+> Remote networking is not about being liked by everyone. It is about being **known for something**: reliability, clear communication, technical depth, or simply being the person who helps.
+
+## What I Would Tell Myself Five Years Ago
+
+- [ ] **Do not mistake informality for a lack of seriousness.** The quality bar is high.
+- [ ] **Learn the vocabulary.** _Alinhar_, _puxar uma task_, _refinamento_: it makes you part of the team faster.
+- [ ] **Align in writing first**, especially across time zones.
+- [ ] **Respect the scale.** At millions of users, every detail matters.
+- [ ] **Build relationships on purpose.** Remotely, they will not happen by themselves.
+
+Five years later, I no longer get startled by a _golaço_ in a meeting. And when a delivery goes really well, I have caught myself thinking the same word.
+
+## References
+
+[^ref]

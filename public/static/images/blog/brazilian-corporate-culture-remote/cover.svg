@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0f172a"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="80" y="150" font-size="26" letter-spacing="4" fill="#22c55e" font-weight="600">CAREER · REMOTE WORK</text>
+    <text x="80" y="250" font-size="72" font-weight="700" fill="#f8fafc">Brazilian Corporate</text>
+    <text x="80" y="335" font-size="72" font-weight="700" fill="#f8fafc">Culture, Remotely</text>
+    <text x="80" y="405" font-size="30" fill="#94a3b8">Five years of lessons from Maputo</text>
+
+    <g font-size="26" font-weight="600">
+      <rect x="760" y="430" width="200" height="60" rx="30" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+      <text x="860" y="469" text-anchor="middle" fill="#cbd5e1">alinhar?</text>
+
+      <rect x="870" y="505" width="250" height="60" rx="30" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+      <text x="995" y="544" text-anchor="middle" fill="#cbd5e1">puxar uma task</text>
+
+      <rect x="80" y="480" width="230" height="64" rx="32" fill="#16a34a"/>
+      <text x="195" y="521" text-anchor="middle" fill="#ffffff">golaço! ⚽</text>
+
+      <rect x="340" y="480" width="210" height="64" rx="32" fill="#1e293b" stroke="#16a34a" stroke-width="2"/>
+      <text x="445" y="521" text-anchor="middle" fill="#22c55e">refinamento</text>
+    </g>
+  </g>
+</svg>

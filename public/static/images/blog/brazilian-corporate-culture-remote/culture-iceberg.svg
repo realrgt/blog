@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
+  <rect width="1200" height="600" rx="16" fill="#f8fafc"/>
+  <rect x="0" y="230" width="1200" height="370" fill="#e0f2fe"/>
+  <rect x="0" y="560" width="1200" height="40" rx="0" fill="#e0f2fe"/>
+  <path d="M0 584 Q0 600 16 600 L1184 600 Q1200 600 1200 584 Z" fill="#e0f2fe"/>
+  <line x1="0" y1="230" x2="1200" y2="230" stroke="#0ea5e9" stroke-width="3"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="60" y="58" font-size="28" font-weight="700" fill="#0f172a">Relaxed on the surface, rigorous underneath</text>
+    <text x="60" y="92" font-size="18" fill="#475569">What you notice in the first week vs. what you learn in the first year.</text>
+
+    <path d="M 470 230 L 560 130 L 640 165 L 730 230 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+    <path d="M 470 230 L 730 230 L 860 400 L 760 540 L 440 540 L 340 400 Z" fill="#bae6fd" stroke="#0ea5e9" stroke-width="2"/>
+
+    <g font-size="18" fill="#0f172a">
+      <text x="770" y="140" font-weight="700">What you hear</text>
+      <text x="770" y="170" fill="#334155">• Informal tone and jokes on calls</text>
+      <text x="770" y="196" fill="#334155">• Football metaphors in meetings</text>
+      <text x="60" y="150" font-weight="700">What you see first</text>
+      <text x="60" y="180" fill="#334155">• Emojis and memes in team chats</text>
+      <text x="60" y="206" fill="#334155">• First names, no matter the title</text>
+    </g>
+
+    <g font-size="18" fill="#0c4a6e">
+      <text x="600" y="300" text-anchor="middle" font-weight="700">What holds it together</text>
+      <text x="600" y="340" text-anchor="middle">Rigid commitment to delivery quality</text>
+      <text x="600" y="374" text-anchor="middle">Strong team spirit and ownership</text>
+      <text x="600" y="408" text-anchor="middle">Competitive, high-performing teams</text>
+      <text x="600" y="442" text-anchor="middle">Mature engineering practices</text>
+      <text x="600" y="476" text-anchor="middle">Scale: millions of users, real money</text>
+    </g>
+  </g>
+</svg>
