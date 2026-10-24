@@ -1,0 +1,167 @@
+---
+title: 'The Art of Asking the Right Questions: How Backend Engineers Avoid Rework Before Writing Code'
+date: '2026-10-24'
+language: en
+tags: ['career', 'agile', 'software-design', 'communication']
+authors: ['ergito-vilanculos']
+draft: false
+featured: false
+summary: 'Most rework is not caused by bad code, but by questions nobody asked. How to prepare for refinements and discovery sessions, and which questions a backend engineer should ask before writing the first line.'
+images: ['/static/images/blog/asking-the-right-questions/cover.png']
+layout: PostLayout
+bibliography: references-data.bib
+---
+
+Some of the most expensive bugs are not bugs in the code. The code does exactly what it was asked to do. The problem is that **nobody asked the right question before writing it**.
+
+A business rule that was "obvious" to the product team. An edge case that "never happens". A dependency nobody mentioned because everyone assumed someone else knew.
+
+This post is about the moment where that rework is cheapest to avoid: **planning sessions**, such as technical refinements, discovery calls and backlog grooming. And about how a backend engineer can get the most out of them.
+
+## These Calls Are Not a Surprise
+
+Here is something we often forget: **refinements and discovery sessions are not secret**.
+
+They are scheduled in advance and occupy a slot in your calendar. Most of the time, there is already an agenda, a list of cards, or key points written down in the invite.
+
+That means you have a choice. You can join the call cold and react to whatever comes up. Or you can arrive **prepared**, with context, notes and questions.
+
+The difference shows up weeks later, in how much of the work has to be redone.
+
+## The Day Before: Do Your Homework
+
+My rule is simple: **check the agenda one day before** and do a short pre-study.
+
+![Three stages of a refinement: the day before, read the agenda, revisit flows, assume every card is yours, size complexity and dependencies, list risks and write questions; in the call, ask everything, turn rules into examples, confirm scope, name owners, park unknowns and agree on acceptance criteria; the day after, update the card, follow up on open questions, flag risks, split cards and only then write code](/static/images/blog/asking-the-right-questions/refinement-prep.svg)
+
+### 1. Read the cards and revisit the flows
+
+Read every card on the agenda. Then, when possible, **revisit the flows they touch**: the endpoints, the services, the tables, the events. Even 20 minutes of reading code and diagrams changes the quality of the questions you will ask.
+
+### 2. Assume every card will be yours
+
+This is the most useful mindset shift I know: **imagine that every card in the session will be assigned to you**.
+
+It changes how you read. You stop skimming and start asking yourself: _"If I had to start this tomorrow morning, what would I need to know?"_
+
+### 3. Size the work before anyone asks you to
+
+For each card, try to estimate:
+
+- **Complexity:** Is this a new field, or a new flow? A query change, or a data migration?
+- **Dependencies:** Other teams, other services, external providers, feature flags, data that does not exist yet.
+- **Risks:** Performance, security, data consistency, backwards compatibility, regulatory requirements.
+
+You do not need precise answers. You need to know **where the uncertainty is**.
+
+### 4. Write your questions down
+
+Take notes. A short list per card is enough. Questions you write down the day before are the ones you will actually ask. Questions you only think about during the call are the ones you will forget.
+
+## In the Call: Ask Everything, Assume Nothing
+
+Now the part that requires some courage: **communicate clearly and ask every question you have**, without assuming previous knowledge.
+
+> [!IMPORTANT]
+> **There are no stupid questions.** If something is unclear to you, it is probably unclear to someone else too. And if it is clear to everyone else, you will learn something in thirty seconds instead of guessing for three days.
+
+Asking does not make you look less senior. In my experience, it is the opposite: the people who ask the most precise questions in a refinement are usually the ones the team trusts most with the hard cards.
+
+### Turn rules into examples
+
+A rule like _"orders can be cancelled"_ hides a dozen decisions. Ask for **concrete examples** until the edges become visible.
+
+Matt Wynne's **Example Mapping** is a great structure for this: one card for the story, cards for each **rule**, concrete **examples** under each rule, and separate cards for **questions** nobody can answer yet [@Wynne2015]. Unknowns are written down and parked, instead of being debated endlessly or silently assumed.
+
+### Park what nobody knows, but give it an owner
+
+Not every question has an answer in the call. That is fine. What is not fine is leaving the call without knowing **who will find the answer and by when**.
+
+### Check the card is ready
+
+Bill Wake's **INVEST** criteria are a good final check: a story should be Independent, Negotiable, Valuable, Estimable, Small and Testable [@Wake2003]. If you cannot estimate it or describe how to test it, it is not ready yet, and that is a perfectly valid outcome of a refinement.
+
+## The Questions a Backend Engineer Should Ask
+
+Every domain is different, but some questions come back in almost every refinement. This is the list I keep in mind:
+
+| Area               | Questions                                                                                                       |
+| ------------------ | --------------------------------------------------------------------------------------------------------------- |
+| **Business rules** | What exactly triggers this? Are there exceptions? What happens at the boundaries (zero, limits, expired dates)? |
+| **Scope**          | What is explicitly out of scope? Is there a phase 2 we should prepare for, or not?                              |
+| **Data**           | Where does this data come from? Who owns it? Do we need a migration or a backfill for existing records?         |
+| **Volume**         | How many requests or records per day? Are there peaks (paydays, campaigns, end of month)?                       |
+| **Integrations**   | Which services or providers are involved? What are their limits, SLAs and failure modes?                        |
+| **Failure**        | What should happen when something fails halfway? Retry, compensate, or alert a human?                           |
+| **Consistency**    | Can the result be eventually consistent, or must it be immediate? Can the same request arrive twice?            |
+| **Security**       | Who is allowed to do this? Is there personal or financial data involved?                                        |
+| **Compatibility**  | Who consumes this API or event today? Will this change break them?                                              |
+| **Observability**  | How will we know it is working in production? Which metric or alert tells us it is not?                         |
+| **Acceptance**     | How will QA and the product team validate this? What does "done" look like?                                     |
+
+Not every question applies to every card. The goal is not to ask all of them every time, but to **never skip one by accident**.
+
+## From Answers to Code
+
+The best part of a well-asked question is that the answer often becomes **explicit code**. Take a simple card: _"Customers can cancel an order."_
+
+A few questions in the refinement turned it into precise rules: an unpaid order can always be cancelled, a paid order only up to 30 minutes after payment, never after it is dispatched, and partial cancellation is out of scope for now. That answer translates directly into the domain:
+
+```typescript:src/orders/cancellation-policy.ts
+const CANCELLATION_WINDOW_MS = 30 * 60 * 1000
+
+export interface Order {
+  status: 'pending_payment' | 'paid' | 'dispatched' | 'delivered' | 'cancelled'
+  paidAt?: Date
+}
+
+// Rules agreed in refinement. Partial cancellation is out of scope.
+export function canCancel(order: Order, now: Date): boolean {
+  if (order.status === 'pending_payment') return true
+  if (order.status !== 'paid' || !order.paidAt) return false
+
+  return now.getTime() - order.paidAt.getTime() <= CANCELLATION_WINDOW_MS
+}
+```
+
+The example is illustrative, but the point is real: **the code is simple because the questions were asked**. Without them, the same function would be full of guesses, and every guess is a future bug report.
+
+## Why It Matters: The Cost of a Late Answer
+
+The same question can cost a sentence or a production incident. It depends only on **when** it is asked.
+
+![Illustrative bar chart showing the cost of discovering a wrong assumption growing at each stage: a sentence in refinement, rewriting a function during coding, redoing the design at code review, reopening the card in QA, and an incident plus data fix in production](/static/images/blog/asking-the-right-questions/cost-of-late-answers.svg)
+
+- **In refinement**, a wrong assumption costs one sentence: _"Ah, no, that is not how it works."_
+- **During coding**, it costs rewriting a function.
+- **At code review**, it can mean redoing the design.
+- **In QA**, the card goes back to the board.
+- **In production**, it becomes an incident, sometimes followed by fixing data that is already wrong.
+
+> [!TIP]
+> When you feel uncomfortable asking a question in a meeting, remember this chart. A slightly awkward moment in a call is the cheapest version of that mistake.
+
+## The Day After: Close the Loop
+
+A refinement is only as good as what remains after it:
+
+- **Write the answers into the card.** Not in your personal notes, in the place the whole team will look.
+- **Update the acceptance criteria** with the examples you agreed on.
+- **Follow up on open questions** with the people who own them.
+- **Split the cards that grew** during the conversation.
+- **Only then, write code.**
+
+## Takeaways
+
+- [ ] Check the agenda **one day before** and revisit the flows involved.
+- [ ] Read every card **as if it will be yours**.
+- [ ] Map **complexity, dependencies and risks** before the call.
+- [ ] **Write your questions down**, and ask all of them. There are no stupid questions.
+- [ ] Turn rules into **concrete examples** and park unknowns with an owner.
+- [ ] Record the answers **in the card**, not in your head.
+
+Good engineers write good code. Great engineers make sure they are writing the **right** code, and that starts with the right questions.
+
+## References
+
+[^ref]

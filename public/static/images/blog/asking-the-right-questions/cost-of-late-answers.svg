@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500">
+  <rect width="1200" height="500" rx="16" fill="#f8fafc"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="60" y="58" font-size="28" font-weight="700" fill="#0f172a">The same question, asked at different moments</text>
+    <text x="60" y="92" font-size="18" fill="#475569">Illustrative: what a wrong assumption costs depending on when it is discovered.</text>
+
+    <line x1="100" y1="420" x2="1140" y2="420" stroke="#94a3b8" stroke-width="2"/>
+
+    <g font-size="17" text-anchor="middle">
+      <rect x="140" y="380" width="140" height="40" rx="6" fill="#16a34a"/>
+      <text x="210" y="450" font-weight="600" fill="#0f172a">Refinement</text>
+      <text x="210" y="472" font-size="15" fill="#64748b">a sentence</text>
+
+      <rect x="340" y="340" width="140" height="80" rx="6" fill="#84cc16"/>
+      <text x="410" y="450" font-weight="600" fill="#0f172a">Coding</text>
+      <text x="410" y="472" font-size="15" fill="#64748b">rewrite a function</text>
+
+      <rect x="540" y="290" width="140" height="130" rx="6" fill="#eab308"/>
+      <text x="610" y="450" font-weight="600" fill="#0f172a">Code review</text>
+      <text x="610" y="472" font-size="15" fill="#64748b">redo the design</text>
+
+      <rect x="740" y="220" width="140" height="200" rx="6" fill="#f97316"/>
+      <text x="810" y="450" font-weight="600" fill="#0f172a">QA</text>
+      <text x="810" y="472" font-size="15" fill="#64748b">reopen the card</text>
+
+      <rect x="940" y="130" width="140" height="290" rx="6" fill="#ef4444"/>
+      <text x="1010" y="450" font-weight="600" fill="#0f172a">Production</text>
+      <text x="1010" y="472" font-size="15" fill="#64748b">incident + data fix</text>
+    </g>
+  </g>
+</svg>
