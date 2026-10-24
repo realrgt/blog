@@ -1,0 +1,167 @@
+---
+title: 'A arte de fazer as perguntas certas: como evitar retrabalho antes da primeira linha de código'
+date: '2026-10-24'
+language: pt
+tags: ['career', 'agile', 'software-design', 'communication']
+authors: ['ergito-vilanculos']
+draft: false
+featured: false
+summary: 'A maior parte do retrabalho não vem de código ruim, mas de perguntas que ninguém fez. Como se preparar para refinamentos e discoveries, e quais perguntas um engenheiro backend deve fazer antes de escrever a primeira linha.'
+images: ['/static/images/blog/asking-the-right-questions/cover.png']
+layout: PostLayout
+bibliography: references-data.bib
+---
+
+Alguns dos bugs mais caros não são bugs no código. O código faz exatamente o que pediram. O problema é que **ninguém fez a pergunta certa antes de escrevê-lo**.
+
+Uma regra de negócio que era "óbvia" para o time de produto. Um caso de borda que "nunca acontece". Uma dependência que ninguém mencionou porque todo mundo achou que outra pessoa sabia.
+
+Este post é sobre o momento em que esse retrabalho é mais barato de evitar: as **agendas de planejamento**, como refinamentos técnicos, discoveries e grooming de backlog. E sobre como um engenheiro backend pode aproveitar essas sessões ao máximo.
+
+## Essas calls não são surpresa
+
+Tem uma coisa que a gente costuma esquecer: **refinamentos e discoveries não são segredo para ninguém**.
+
+Eles são marcados com antecedência e ocupam um slot da sua agenda. Na maioria das vezes, já existe uma pauta, uma lista de cards ou pontos-chave anotados no convite.
+
+Isso significa que você tem uma escolha. Pode entrar na call no improviso e reagir ao que aparecer. Ou pode chegar **preparado**, com contexto, anotações e perguntas.
+
+A diferença aparece semanas depois, em quanto do trabalho precisa ser refeito.
+
+## Na véspera: faça o dever de casa
+
+A minha regra é simples: **consulte a pauta um dia antes** e faça um pré-estudo rápido.
+
+![Três etapas de um refinamento: na véspera, ler a pauta, revisitar os fluxos, assumir que todo card é seu, medir complexidade e dependências, listar riscos e anotar perguntas; na call, perguntar tudo, transformar regras em exemplos, confirmar o escopo, nomear responsáveis, estacionar o que ninguém sabe e combinar critérios de aceite; no dia seguinte, atualizar o card, cobrar as perguntas em aberto, sinalizar riscos, quebrar cards e só então escrever código](/static/images/blog/asking-the-right-questions/refinement-prep.svg)
+
+### 1. Leia os cards e revisite os fluxos
+
+Leia todos os cards da pauta. Depois, quando possível, **revisite os fluxos que eles tocam**: os endpoints, os serviços, as tabelas, os eventos. Mesmo 20 minutos lendo código e diagramas mudam a qualidade das perguntas que você vai fazer.
+
+### 2. Imagine que todo card vai ser seu
+
+Esta é a mudança de mentalidade mais útil que eu conheço: **imagine que cada card da sessão vai ser alocado a você**.
+
+Isso muda a forma como você lê. Você para de passar o olho e começa a se perguntar: _"Se eu tivesse que começar isso amanhã de manhã, o que eu precisaria saber?"_
+
+### 3. Meça o trabalho antes que alguém peça
+
+Para cada card, tente estimar:
+
+- **Complexidade:** É um campo novo ou um fluxo novo? Uma mudança de query ou uma migração de dados?
+- **Dependências:** Outros times, outros serviços, fornecedores externos, feature flags, dados que ainda não existem.
+- **Riscos:** Performance, segurança, consistência de dados, compatibilidade com versões anteriores, requisitos regulatórios.
+
+Você não precisa de respostas precisas. Precisa saber **onde está a incerteza**.
+
+### 4. Anote as suas perguntas
+
+Tome notas. Uma lista curta por card já basta. As perguntas que você anota na véspera são as que você vai realmente fazer. As que você só pensa durante a call são as que você vai esquecer.
+
+## Na call: pergunte tudo, não assuma nada
+
+Agora vem a parte que exige um pouco de coragem: **comunique-se com clareza e faça todas as perguntas que tiver**, sem assumir conhecimento prévio.
+
+> [!IMPORTANT]
+> **Não existe pergunta idiota.** Se algo não está claro para você, provavelmente não está claro para mais alguém. E se estiver claro para todo mundo, você aprende algo em trinta segundos em vez de ficar adivinhando por três dias.
+
+Perguntar não te faz parecer menos sênior. Na minha experiência, é o contrário: quem faz as perguntas mais precisas num refinamento costuma ser quem o time mais confia para pegar os cards difíceis.
+
+### Transforme regras em exemplos
+
+Uma regra como _"pedidos podem ser cancelados"_ esconde uma dúzia de decisões. Peça **exemplos concretos** até as bordas ficarem visíveis.
+
+O **Example Mapping**, do Matt Wynne, é uma ótima estrutura para isso: um card para a história, cards para cada **regra**, **exemplos** concretos embaixo de cada regra e cards separados para as **perguntas** que ninguém sabe responder ainda [@Wynne2015]. O que é desconhecido fica anotado e estacionado, em vez de ser debatido sem fim ou assumido em silêncio.
+
+### Estacione o que ninguém sabe, mas com um responsável
+
+Nem toda pergunta tem resposta na call. Tudo bem. O que não pode é sair da call sem saber **quem vai buscar a resposta e até quando**.
+
+### Confira se o card está pronto
+
+Os critérios **INVEST**, do Bill Wake, são um bom teste final: uma história deve ser Independente, Negociável, Valiosa, Estimável, Pequena (_Small_) e Testável [@Wake2003]. Se você não consegue estimar ou descrever como testar, o card ainda não está pronto, e esse é um resultado perfeitamente válido para um refinamento.
+
+## As perguntas que um engenheiro backend deve fazer
+
+Cada domínio é diferente, mas algumas perguntas voltam em quase todo refinamento. Esta é a lista que eu tenho em mente:
+
+| Área                  | Perguntas                                                                                                          |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Regras de negócio** | O que exatamente dispara isso? Existem exceções? O que acontece nas bordas (zero, limites, datas expiradas)?       |
+| **Escopo**            | O que está explicitamente fora do escopo? Existe uma fase 2 para a qual devemos nos preparar, ou não?              |
+| **Dados**             | De onde vêm esses dados? Quem é o dono? Precisamos de migração ou backfill para os registros existentes?           |
+| **Volume**            | Quantas requisições ou registros por dia? Existem picos (dia de pagamento, campanhas, fim de mês)?                 |
+| **Integrações**       | Quais serviços ou fornecedores estão envolvidos? Quais são os limites, SLAs e modos de falha deles?                |
+| **Falhas**            | O que deve acontecer quando algo falha no meio do caminho? Retry, compensação ou alerta para um humano?            |
+| **Consistência**      | O resultado pode ser eventualmente consistente ou precisa ser imediato? A mesma requisição pode chegar duas vezes? |
+| **Segurança**         | Quem tem permissão para fazer isso? Há dados pessoais ou financeiros envolvidos?                                   |
+| **Compatibilidade**   | Quem consome essa API ou esse evento hoje? Essa mudança vai quebrar alguém?                                        |
+| **Observabilidade**   | Como vamos saber que está funcionando em produção? Qual métrica ou alerta nos diz que não está?                    |
+| **Aceite**            | Como QA e produto vão validar isso? Como é o "pronto"?                                                             |
+
+Nem toda pergunta se aplica a todo card. O objetivo não é fazer todas sempre, e sim **nunca pular uma por acidente**.
+
+## Das respostas para o código
+
+A melhor parte de uma pergunta bem feita é que a resposta muitas vezes vira **código explícito**. Pegue um card simples: _"O cliente pode cancelar um pedido."_
+
+Algumas perguntas no refinamento transformaram isso em regras precisas: um pedido não pago pode sempre ser cancelado, um pedido pago só até 30 minutos depois do pagamento, nunca depois de despachado, e o cancelamento parcial está fora do escopo por enquanto. Essa resposta vira domínio diretamente:
+
+```typescript:src/orders/cancellation-policy.ts
+const CANCELLATION_WINDOW_MS = 30 * 60 * 1000
+
+export interface Order {
+  status: 'pending_payment' | 'paid' | 'dispatched' | 'delivered' | 'cancelled'
+  paidAt?: Date
+}
+
+// Rules agreed in refinement. Partial cancellation is out of scope.
+export function canCancel(order: Order, now: Date): boolean {
+  if (order.status === 'pending_payment') return true
+  if (order.status !== 'paid' || !order.paidAt) return false
+
+  return now.getTime() - order.paidAt.getTime() <= CANCELLATION_WINDOW_MS
+}
+```
+
+O exemplo é ilustrativo, mas o ponto é real: **o código é simples porque as perguntas foram feitas**. Sem elas, a mesma função estaria cheia de palpites, e cada palpite é um futuro bug reportado.
+
+## Por que isso importa: o custo de uma resposta tardia
+
+A mesma pergunta pode custar uma frase ou um incidente em produção. Depende só de **quando** ela é feita.
+
+![Gráfico de barras ilustrativo mostrando o custo de descobrir uma suposição errada crescendo a cada etapa: uma frase no refinamento, reescrever uma função durante o desenvolvimento, refazer o design no code review, reabrir o card em QA e um incidente com correção de dados em produção](/static/images/blog/asking-the-right-questions/cost-of-late-answers.svg)
+
+- **No refinamento**, uma suposição errada custa uma frase: _"Ah, não, não é assim que funciona."_
+- **Durante o desenvolvimento**, custa reescrever uma função.
+- **No code review**, pode significar refazer o design.
+- **Em QA**, o card volta para o board.
+- **Em produção**, vira incidente, às vezes seguido de corrigir dados que já estão errados.
+
+> [!TIP]
+> Quando sentir desconforto em fazer uma pergunta numa reunião, lembre deste gráfico. Um momento meio constrangedor numa call é a versão mais barata desse erro.
+
+## No dia seguinte: feche o ciclo
+
+Um refinamento vale o que fica depois dele:
+
+- **Escreva as respostas no card.** Não nas suas anotações pessoais, no lugar onde o time todo vai olhar.
+- **Atualize os critérios de aceite** com os exemplos combinados.
+- **Cobre as perguntas em aberto** com quem ficou responsável por elas.
+- **Quebre os cards que cresceram** durante a conversa.
+- **Só então, escreva código.**
+
+## Para levar
+
+- [ ] Consulte a pauta **um dia antes** e revisite os fluxos envolvidos.
+- [ ] Leia cada card **como se ele fosse seu**.
+- [ ] Mapeie **complexidade, dependências e riscos** antes da call.
+- [ ] **Anote as suas perguntas** e faça todas elas. Não existe pergunta idiota.
+- [ ] Transforme regras em **exemplos concretos** e estacione o desconhecido com um responsável.
+- [ ] Registre as respostas **no card**, não na sua cabeça.
+
+Bons engenheiros escrevem bom código. Grandes engenheiros garantem que estão escrevendo o código **certo**, e isso começa com as perguntas certas.
+
+## Referências
+
+[^ref]
