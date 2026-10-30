@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#16a34a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="600" rx="16" fill="#f8fafc"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="60" y="58" font-size="28" font-weight="700" fill="#0f172a">What reliable systems and reliable engineers have in common</text>
+
+    <text x="60" y="110" font-size="16" font-weight="700" letter-spacing="2" fill="#64748b">RELIABLE SYSTEM</text>
+    <text x="660" y="110" font-size="16" font-weight="700" letter-spacing="2" fill="#15803d">RELIABLE ENGINEER</text>
+
+    <g font-size="18">
+      <rect x="60" y="130" width="480" height="58" rx="10" fill="#e2e8f0"/>
+      <text x="84" y="166" fill="#0f172a"><tspan font-weight="700">Availability</tspan> — up when users need it</text>
+      <rect x="660" y="130" width="480" height="58" rx="10" fill="#dcfce7"/>
+      <text x="684" y="166" fill="#14532d">Present and on time when it matters</text>
+
+      <rect x="60" y="204" width="480" height="58" rx="10" fill="#e2e8f0"/>
+      <text x="84" y="240" fill="#0f172a"><tspan font-weight="700">Latency</tspan> — answers fast</text>
+      <rect x="660" y="204" width="480" height="58" rx="10" fill="#dcfce7"/>
+      <text x="684" y="240" fill="#14532d">Predictable response time to the team</text>
+
+      <rect x="60" y="278" width="480" height="58" rx="10" fill="#e2e8f0"/>
+      <text x="84" y="314" fill="#0f172a"><tspan font-weight="700">Observability</tspan> — state is visible</text>
+      <rect x="660" y="278" width="480" height="58" rx="10" fill="#dcfce7"/>
+      <text x="684" y="314" fill="#14532d">Progress and blockers are visible</text>
+
+      <rect x="60" y="352" width="480" height="58" rx="10" fill="#e2e8f0"/>
+      <text x="84" y="388" fill="#0f172a"><tspan font-weight="700">Graceful degradation</tspan> — fails loudly</text>
+      <rect x="660" y="352" width="480" height="58" rx="10" fill="#dcfce7"/>
+      <text x="684" y="388" fill="#14532d">Raises risks early, never goes silent</text>
+
+      <rect x="60" y="426" width="480" height="58" rx="10" fill="#e2e8f0"/>
+      <text x="84" y="462" fill="#0f172a"><tspan font-weight="700">Runbooks</tspan> — anyone can operate it</text>
+      <rect x="660" y="426" width="480" height="58" rx="10" fill="#dcfce7"/>
+      <text x="684" y="462" fill="#14532d">Clear documentation others can follow</text>
+
+      <rect x="60" y="500" width="480" height="58" rx="10" fill="#e2e8f0"/>
+      <text x="84" y="536" fill="#0f172a"><tspan font-weight="700">Incident response</tspan> — someone owns it</text>
+      <rect x="660" y="500" width="480" height="58" rx="10" fill="#16a34a"/>
+      <text x="684" y="536" fill="#ffffff" font-weight="600">Takes ownership of the hard problems</text>
+    </g>
+
+    <g stroke="#16a34a" stroke-width="3" fill="none">
+      <line x1="546" y1="159" x2="652" y2="159" marker-end="url(#a)"/>
+      <line x1="546" y1="233" x2="652" y2="233" marker-end="url(#a)"/>
+      <line x1="546" y1="307" x2="652" y2="307" marker-end="url(#a)"/>
+      <line x1="546" y1="381" x2="652" y2="381" marker-end="url(#a)"/>
+      <line x1="546" y1="455" x2="652" y2="455" marker-end="url(#a)"/>
+      <line x1="546" y1="529" x2="652" y2="529" marker-end="url(#a)"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="460" viewBox="0 0 1200 460">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="460" rx="16" fill="#f8fafc"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="60" y="58" font-size="28" font-weight="700" fill="#0f172a">Routing a business question</text>
+    <text x="60" y="92" font-size="18" fill="#475569">Who to ask, in which order, and what each one brings to the answer.</text>
+
+    <g font-size="17" text-anchor="middle">
+      <rect x="60" y="150" width="190" height="130" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+      <text x="155" y="200" font-size="20" font-weight="700" fill="#0f172a">Your doubt</text>
+      <text x="155" y="232" fill="#475569">about a rule</text>
+      <text x="155" y="256" fill="#475569">or a flow</text>
+
+      <rect x="300" y="150" width="230" height="130" rx="14" fill="#16a34a"/>
+      <text x="415" y="194" font-size="15" fill="#dcfce7">1st</text>
+      <text x="415" y="222" font-size="22" font-weight="700" fill="#ffffff">Product Owner</text>
+      <text x="415" y="254" fill="#dcfce7">what the business wants</text>
+
+      <rect x="580" y="150" width="230" height="130" rx="14" fill="#0ea5e9"/>
+      <text x="695" y="194" font-size="15" fill="#e0f2fe">2nd</text>
+      <text x="695" y="222" font-size="22" font-weight="700" fill="#ffffff">QA</text>
+      <text x="695" y="254" fill="#e0f2fe">how the product behaves</text>
+
+      <rect x="860" y="150" width="280" height="130" rx="14" fill="#0f172a"/>
+      <text x="1000" y="194" font-size="15" fill="#94a3b8">3rd: match it with</text>
+      <text x="1000" y="222" font-size="22" font-weight="700" fill="#ffffff">Tech Lead</text>
+      <text x="1000" y="254" fill="#cbd5e1">how the flows really work</text>
+    </g>
+
+    <g stroke="#475569" stroke-width="3" fill="none">
+      <line x1="252" y1="215" x2="296" y2="215" marker-end="url(#a)"/>
+      <line x1="532" y1="215" x2="576" y2="215" marker-end="url(#a)"/>
+      <line x1="812" y1="215" x2="856" y2="215" marker-end="url(#a)"/>
+      <path d="M 1000 282 L 1000 340 L 700 340" marker-end="url(#a)"/>
+    </g>
+
+    <rect x="380" y="316" width="316" height="96" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="538" y="356" text-anchor="middle" font-size="20" font-weight="700" fill="#14532d">Write the answer down</text>
+    <text x="538" y="386" text-anchor="middle" font-size="16" fill="#166534">in the card or the team docs</text>
+  </g>
+</svg>

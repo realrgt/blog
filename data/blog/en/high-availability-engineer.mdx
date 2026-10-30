@@ -1,0 +1,158 @@
+---
+title: 'High Availability for Engineers: How to Be There When Your Team Needs You Most'
+date: '2026-10-29'
+language: en
+tags: ['career', 'communication', 'ownership', 'onboarding']
+authors: ['ergito-vilanculos']
+draft: false
+featured: false
+summary: 'Reliable systems are available when users need them. Reliable engineers are too. Proactivity, punctuality, clear documentation and ownership, plus a practical guide to onboarding into a new team through QA, the PO and the Tech Lead.'
+images: ['/static/images/blog/high-availability-engineer/cover.png']
+layout: PostLayout
+bibliography: references-data.bib
+---
+
+We spend a lot of time designing systems that are **highly available**: redundancy, health checks, alerts, runbooks. We measure uptime with decimals and celebrate every extra nine.
+
+But there is another kind of availability that matters just as much for a product to succeed: **the availability of the people building it**.
+
+Just like reliable systems usually have good availability, a good engineer is usually **there, ready, when the team and the product need it most**. This post is about what that looks like in practice, and how to build that reputation from your first week in a new team.
+
+## Reliable Systems, Reliable Engineers
+
+The analogy goes further than it seems. Almost every property we value in a reliable system has a human equivalent:
+
+![Mapping between reliable system properties and reliable engineer behaviors: availability to being present and on time, latency to predictable response time, observability to visible progress and blockers, graceful degradation to raising risks early, runbooks to clear documentation, and incident response to taking ownership of hard problems](/static/images/blog/high-availability-engineer/reliability-mapping.svg)
+
+- **Availability:** you are present and on time when it matters.
+- **Latency:** the team knows roughly how long it takes you to respond.
+- **Observability:** your progress and your blockers are visible without anyone having to ask.
+- **Graceful degradation:** when something goes wrong, you raise it early instead of going silent.
+- **Runbooks:** what you know is written down, so others can operate without you.
+- **Incident response:** when there is a hard problem, someone owns it. Often, that someone is you.
+
+### Availability is not "always online"
+
+One important nuance before going further. In Site Reliability Engineering, 100% is rarely the target. Service Level Objectives are **explicit, realistic targets** measured over time, and the gap below 100% is a deliberate choice, not a failure [@SRESLO2016].
+
+The same applies to people. Being highly available does **not** mean answering messages at midnight or never taking a day off. That is a fast path to burnout, and a burned-out engineer is the least available engineer of all.
+
+It means being **predictable**: the team knows when you are around, how to reach you, and that you will show up when it really matters.
+
+> [!IMPORTANT]
+> Reliability is about **consistency**, not heroics. One all-nighter is forgotten in a month. Showing up prepared, on time, every week, is what builds trust.
+
+## Be Punctual, Visibly
+
+Punctuality sounds like a small thing. It is not. It is the most visible signal of reliability you can send, and you can send it every day.
+
+- **Join meetings on time**, with the agenda read and your notes ready.
+- **Deliver on the dates you committed to.** And when a date is at risk, say so **as soon as you know**, not on the day of the deadline.
+- **Close loops.** If you said "I will check and get back to you", get back, even if the answer is "I still do not know, here is what I found so far".
+- **Respond within a predictable window** during working hours. It does not need to be instant. It needs to be reliable.
+
+People rarely remember who was late once. They always remember who was **never** late.
+
+## Proactivity: Do Not Wait to Be Asked
+
+Proactive engineers notice problems **before** they become tickets:
+
+- A dashboard that looks strange after a deploy.
+- A flaky test that everyone ignores.
+- Documentation that no longer matches the code.
+- A dependency that will reach end of life next quarter.
+
+You do not have to fix everything yourself. But you can **raise it, with context and a suggestion**. That alone puts you in a different category from the engineers who only work on what is assigned to them.
+
+## Clear Documentation and Communication
+
+The most available engineer in the world still has a limited number of hours. Documentation is how your knowledge stays available **when you are not**.
+
+- Write PR descriptions that explain the **why**, not only the what.
+- Turn every repeated question into a page in the team's wiki.
+- After solving a tricky incident, leave a short runbook for the next person.
+- In status updates, lead with what matters: **progress, blockers, and what you need from whom**.
+
+Good communication is not about writing more. It is about making sure the right person has the right information **before** they need it.
+
+## Onboarding: Learn the Business Before the Code
+
+The fastest way to become reliable in a new team is to **understand the processes, the team and the product deeply**, and as early as possible.
+
+### Get close to QA from day one
+
+This is my favorite onboarding tip: **become close to the QA people on the team as early as you can**.
+
+QA professionals usually have an excellent understanding of the **business and the product**. They know how features behave from the user's point of view, which flows are fragile, which edge cases have bitten the team before, and how the different user profiles experience the app.
+
+Ask them everything. And ask for access to the tools the team uses:
+
+- [ ] **Documentation:** Confluence or the team's wiki, product specs, architecture diagrams.
+- [ ] **Environments and the app:** test builds, staging URLs, how to install and log in.
+- [ ] **Database:** read access to non-production environments, and which tables matter.
+- [ ] **Credentials and test users:** requested through the team's official process.
+- [ ] **Access segmentation:** how user roles and profiles are separated, and which test users represent each segment.
+- [ ] **Main flows:** the critical journeys the team is responsible for, and how they are tested.
+
+> [!CAUTION]
+> Ask for access through the official channels, and only for what you need. Never ask anyone to share their personal credentials in a chat. Least privilege is part of being reliable too.
+
+### Ask how to make their life easier
+
+Then ask a question that very few engineers ask: **"How can I make your life easier with my daily deliveries?"**
+
+The answers are usually simple and extremely valuable: which environment to deploy to, which test data to prepare, what to write in the card when a story is ready for testing, how to signal a breaking change. A short delivery note can save hours of back-and-forth:
+
+```markdown:delivery-note.md
+**Card:** ORD-142 — Allow order cancellation up to 30 min after payment
+**Environment:** staging (deployed at 14:20)
+**How to test:** log in as a customer with a paid order, open the order details
+**Test users:** customer-paid-01, customer-dispatched-01 (see the team's test user page)
+**Out of scope:** partial cancellation
+**Watch out:** dispatched orders must not show the cancel button
+```
+
+This kind of care is noticed. It turns QA from the last gate before production into a partner who trusts your work.
+
+## Routing Business Questions: PO, QA, then the Tech Lead
+
+When you have a doubt about a business rule, **who you ask, and in which order**, matters.
+
+![Routing a business question: first the Product Owner for what the business wants, then QA for how the product behaves, then matching the information with the Tech Lead for how the flows really work, and finally writing the answer down in the card or the team docs](/static/images/blog/high-availability-engineer/question-routing.svg)
+
+1. **Product Owner first.** Business doubts belong to the PO. They decide what the product should do.
+2. **QA second.** They know how the product behaves today, and often spot gaps between what is expected and what actually happens.
+3. **Tech Lead last, to match the information.** The Tech Lead knows the flows best. Bring what you learned from the PO and QA, and check it against how the system really works.
+
+Each one brings a different piece of the truth: **intent, behavior and implementation**. When the three pieces agree, you can build with confidence. When they do not, you have just found a problem before writing a single line of code.
+
+And always close the loop: **write the answer down** in the card or the team's documentation, so the next person does not have to go through the same route.
+
+## Ownership: Be the Person Who Solves Hard Problems
+
+Every team has problems nobody wants: the intermittent bug, the slow query nobody understands, the integration with poor documentation, the incident at the worst possible moment.
+
+Ownership means **stepping toward those problems instead of away from them**:
+
+- Take the ambiguous ticket and make it clear.
+- Follow an incident until it is truly resolved, not only until the alert stops.
+- When you hand something over, hand it over **complete**: context, decisions and next steps.
+- When you do not know the answer, say so, and say what you will do to find out.
+
+You do not need to know everything to own a problem. You need to **care about the outcome** and keep the team informed until it is done.
+
+## Takeaways
+
+- [ ] Treat your own availability like an SLO: **predictable, not perfect**.
+- [ ] Be **visibly punctual**: on time, prepared, and early with bad news.
+- [ ] Be **proactive**: raise problems with context and a suggestion.
+- [ ] **Document** so your knowledge is available when you are not.
+- [ ] In a new team, **get close to QA**, request the right access, and ask how to make their life easier.
+- [ ] Route business questions: **PO, then QA, then match with the Tech Lead**, and write the answer down.
+- [ ] **Own the hard problems** until they are truly done.
+
+Systems earn trust through uptime. Engineers earn it the same way: by being there, consistently, when it matters most.
+
+## References
+
+[^ref]
