@@ -1,0 +1,158 @@
+---
+title: 'Alta disponibilidade também vale para engenheiros: como estar presente quando o time mais precisa'
+date: '2026-10-29'
+language: pt
+tags: ['career', 'communication', 'ownership', 'onboarding']
+authors: ['ergito-vilanculos']
+draft: false
+featured: false
+summary: 'Sistemas confiáveis estão disponíveis quando os usuários precisam. Engenheiros confiáveis também. Proatividade, pontualidade, documentação clara e ownership, com um guia prático para entrar num time novo apoiado no QA, no PO e no Tech Lead.'
+images: ['/static/images/blog/high-availability-engineer/cover.png']
+layout: PostLayout
+bibliography: references-data.bib
+---
+
+A gente passa muito tempo desenhando sistemas de **alta disponibilidade**: redundância, health checks, alertas, runbooks. Medimos uptime com casas decimais e comemoramos cada nove a mais.
+
+Mas existe outro tipo de disponibilidade que importa tanto quanto para um produto dar certo: **a disponibilidade das pessoas que o constroem**.
+
+Assim como sistemas confiáveis costumam ter boa disponibilidade, um bom engenheiro costuma estar **lá, de prontidão, quando o time e o produto mais precisam**. Este post é sobre como isso funciona na prática, e como construir essa reputação desde a primeira semana num time novo.
+
+## Sistemas confiáveis, engenheiros confiáveis
+
+A analogia vai mais longe do que parece. Quase toda propriedade que valorizamos num sistema confiável tem um equivalente humano:
+
+![Mapeamento entre propriedades de sistemas confiáveis e comportamentos de engenheiros confiáveis: disponibilidade para estar presente e no horário, latência para tempo de resposta previsível, observabilidade para progresso e bloqueios visíveis, degradação graciosa para levantar riscos cedo, runbooks para documentação clara e resposta a incidentes para assumir os problemas difíceis](/static/images/blog/high-availability-engineer/reliability-mapping.svg)
+
+- **Disponibilidade:** você está presente e no horário quando importa.
+- **Latência:** o time sabe mais ou menos quanto tempo você leva para responder.
+- **Observabilidade:** seu progresso e seus bloqueios ficam visíveis sem que ninguém precise perguntar.
+- **Degradação graciosa:** quando algo dá errado, você levanta a mão cedo em vez de sumir.
+- **Runbooks:** o que você sabe está escrito, para que outros consigam operar sem você.
+- **Resposta a incidentes:** quando aparece um problema difícil, alguém assume. Muitas vezes, esse alguém é você.
+
+### Disponibilidade não é "sempre online"
+
+Uma nuance importante antes de seguir. Em Site Reliability Engineering, 100% raramente é a meta. Os Service Level Objectives são **metas explícitas e realistas**, medidas ao longo do tempo, e a distância até os 100% é uma escolha consciente, não uma falha [@SRESLO2016].
+
+Com pessoas é igual. Ter alta disponibilidade **não** significa responder mensagens à meia-noite nem nunca tirar folga. Esse é o caminho mais rápido para o burnout, e um engenheiro esgotado é o menos disponível de todos.
+
+Significa ser **previsível**: o time sabe quando você está por perto, como te encontrar e que você vai aparecer quando realmente importar.
+
+> [!IMPORTANT]
+> Confiabilidade é sobre **consistência**, não sobre heroísmo. Uma madrugada virada é esquecida em um mês. Chegar preparado, no horário, toda semana, é o que constrói confiança.
+
+## Seja pontual, de forma visível
+
+Pontualidade parece pouca coisa. Não é. É o sinal de confiabilidade mais visível que você pode dar, e dá para dar todos os dias.
+
+- **Entre nas reuniões no horário**, com a pauta lida e suas anotações prontas.
+- **Entregue nas datas que você combinou.** E, quando uma data estiver em risco, avise **assim que souber**, e não no dia do prazo.
+- **Feche os ciclos.** Se você disse "vou verificar e te retorno", retorne, mesmo que a resposta seja "ainda não sei, mas isto é o que encontrei até agora".
+- **Responda dentro de uma janela previsível** no horário de trabalho. Não precisa ser instantâneo. Precisa ser confiável.
+
+As pessoas raramente lembram de quem atrasou uma vez. Sempre lembram de quem **nunca** atrasa.
+
+## Proatividade: não espere ser chamado
+
+Engenheiros proativos percebem os problemas **antes** de virarem tickets:
+
+- Um dashboard com cara estranha depois de um deploy.
+- Um teste instável que todo mundo ignora.
+- Uma documentação que não bate mais com o código.
+- Uma dependência que perde suporte no próximo trimestre.
+
+Você não precisa resolver tudo sozinho. Mas pode **levantar o assunto, com contexto e uma sugestão**. Só isso já te coloca numa categoria diferente dos engenheiros que só trabalham no que foi atribuído a eles.
+
+## Documentação clara e boa comunicação
+
+O engenheiro mais disponível do mundo ainda tem um número limitado de horas. A documentação é como o seu conhecimento continua disponível **quando você não está**.
+
+- Escreva descrições de PR que expliquem o **porquê**, não só o quê.
+- Transforme toda pergunta repetida numa página na wiki do time.
+- Depois de resolver um incidente cabeludo, deixe um runbook curto para a próxima pessoa.
+- Nos status, comece pelo que importa: **progresso, bloqueios e o que você precisa de quem**.
+
+Boa comunicação não é escrever mais. É garantir que a pessoa certa tenha a informação certa **antes** de precisar dela.
+
+## Onboarding: aprenda o negócio antes do código
+
+O jeito mais rápido de se tornar confiável num time novo é **entender a fundo os processos, o time e o produto**, e o mais cedo possível.
+
+### Fique próximo do QA desde o primeiro dia
+
+Esta é a minha dica favorita de onboarding: **aproxime-se do pessoal de QA do time o quanto antes**.
+
+Profissionais de QA geralmente têm um ótimo entendimento do **negócio e do produto**. Eles sabem como as funcionalidades se comportam do ponto de vista do usuário, quais fluxos são frágeis, quais casos de borda já morderam o time antes e como os diferentes perfis de usuário enxergam o app.
+
+Pergunte tudo. E peça acesso às ferramentas que o time usa:
+
+- [ ] **Documentação:** Confluence ou a wiki do time, especificações de produto, diagramas de arquitetura.
+- [ ] **Ambientes e o app:** builds de teste, URLs de staging, como instalar e fazer login.
+- [ ] **Banco de dados:** acesso de leitura aos ambientes não produtivos, e quais tabelas importam.
+- [ ] **Credenciais e usuários de teste:** solicitados pelo processo oficial do time.
+- [ ] **Segmentação de acessos:** como os papéis e perfis de usuário são separados, e quais usuários de teste representam cada segmento.
+- [ ] **Fluxos principais:** as jornadas críticas pelas quais o time é responsável, e como elas são testadas.
+
+> [!CAUTION]
+> Peça acessos pelos canais oficiais, e só o que você precisa. Nunca peça para alguém compartilhar credenciais pessoais no chat. Privilégio mínimo também faz parte de ser confiável.
+
+### Pergunte como facilitar a vida dele
+
+Depois, faça uma pergunta que pouquíssimos engenheiros fazem: **"Como eu posso facilitar a sua vida nas minhas entregas do dia a dia?"**
+
+As respostas costumam ser simples e extremamente valiosas: em qual ambiente subir, quais dados de teste preparar, o que escrever no card quando uma história está pronta para teste, como sinalizar uma mudança que quebra compatibilidade. Uma nota de entrega curta pode economizar horas de vai e volta:
+
+```markdown:delivery-note.md
+**Card:** ORD-142 — Permitir cancelamento até 30 min após o pagamento
+**Ambiente:** staging (deploy às 14:20)
+**Como testar:** logar como cliente com um pedido pago e abrir os detalhes do pedido
+**Usuários de teste:** customer-paid-01, customer-dispatched-01 (ver a página de usuários de teste do time)
+**Fora do escopo:** cancelamento parcial
+**Atenção:** pedidos despachados não podem mostrar o botão de cancelar
+```
+
+Esse tipo de cuidado é percebido. Ele transforma o QA de última barreira antes da produção em um parceiro que confia no seu trabalho.
+
+## Roteando dúvidas de negócio: PO, QA e depois o Tech Lead
+
+Quando você tem uma dúvida sobre uma regra de negócio, **a quem perguntar, e em que ordem**, faz diferença.
+
+![Roteamento de uma dúvida de negócio: primeiro o Product Owner, para o que o negócio quer; depois o QA, para como o produto se comporta; em seguida, cruzar as informações com o Tech Lead, para como os fluxos funcionam de verdade; e por fim registrar a resposta no card ou na documentação do time](/static/images/blog/high-availability-engineer/question-routing.svg)
+
+1. **Primeiro o Product Owner.** Dúvida de negócio é com o PO. É ele quem decide o que o produto deve fazer.
+2. **Depois o QA.** Ele sabe como o produto se comporta hoje, e muitas vezes percebe a diferença entre o que se espera e o que de fato acontece.
+3. **Por último, o Tech Lead, para cruzar as informações.** O Tech Lead é quem melhor conhece os fluxos. Leve o que você ouviu do PO e do QA e confira com o funcionamento real do sistema.
+
+Cada um traz uma parte da verdade: **intenção, comportamento e implementação**. Quando as três partes batem, você constrói com confiança. Quando não batem, você acabou de encontrar um problema antes de escrever uma linha de código.
+
+E sempre feche o ciclo: **registre a resposta** no card ou na documentação do time, para que a próxima pessoa não precise fazer o mesmo caminho.
+
+## Ownership: seja a pessoa que resolve os problemas difíceis
+
+Todo time tem problemas que ninguém quer: o bug intermitente, a query lenta que ninguém entende, a integração mal documentada, o incidente na pior hora possível.
+
+Ownership é **ir em direção a esses problemas em vez de fugir deles**:
+
+- Pegue o ticket ambíguo e deixe-o claro.
+- Acompanhe um incidente até ele estar realmente resolvido, e não só até o alerta parar.
+- Quando passar algo adiante, passe **completo**: contexto, decisões e próximos passos.
+- Quando não souber a resposta, diga, e diga o que vai fazer para descobrir.
+
+Você não precisa saber tudo para assumir um problema. Precisa **se importar com o resultado** e manter o time informado até ele estar resolvido.
+
+## Para levar
+
+- [ ] Trate a sua disponibilidade como um SLO: **previsível, não perfeita**.
+- [ ] Seja **pontual de forma visível**: no horário, preparado e cedo com as más notícias.
+- [ ] Seja **proativo**: levante problemas com contexto e uma sugestão.
+- [ ] **Documente** para que seu conhecimento esteja disponível quando você não estiver.
+- [ ] Num time novo, **aproxime-se do QA**, peça os acessos certos e pergunte como facilitar a vida dele.
+- [ ] Roteie dúvidas de negócio: **PO, depois QA, e cruze com o Tech Lead**, e registre a resposta.
+- [ ] **Assuma os problemas difíceis** até estarem realmente resolvidos.
+
+Sistemas ganham confiança com uptime. Engenheiros ganham do mesmo jeito: estando presentes, com consistência, quando mais importa.
+
+## Referências
+
+[^ref]

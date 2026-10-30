@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0f172a"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="80" y="150" font-size="26" letter-spacing="4" fill="#22c55e" font-weight="600">CAREER · OWNERSHIP</text>
+    <text x="80" y="250" font-size="76" font-weight="700" fill="#f8fafc">High Availability</text>
+    <text x="80" y="340" font-size="76" font-weight="700" fill="#f8fafc">for Engineers</text>
+    <text x="80" y="410" font-size="30" fill="#94a3b8">Be there when the team needs you most</text>
+
+    <g transform="translate(770 470)">
+      <text x="0" y="-250" font-size="20" fill="#94a3b8">team trust</text>
+      <line x1="0" y1="0" x2="340" y2="0" stroke="#334155" stroke-width="2"/>
+      <g fill="#16a34a">
+        <rect x="0" y="-60" width="28" height="60" rx="4"/>
+        <rect x="40" y="-80" width="28" height="80" rx="4"/>
+        <rect x="80" y="-95" width="28" height="95" rx="4"/>
+        <rect x="120" y="-120" width="28" height="120" rx="4"/>
+        <rect x="160" y="-140" width="28" height="140" rx="4"/>
+        <rect x="200" y="-165" width="28" height="165" rx="4"/>
+        <rect x="240" y="-185" width="28" height="185" rx="4"/>
+        <rect x="280" y="-210" width="28" height="210" rx="4" fill="#22c55e"/>
+      </g>
+      <text x="0" y="36" font-size="20" fill="#94a3b8">showing up, consistently</text>
+    </g>
+  </g>
+</svg>
