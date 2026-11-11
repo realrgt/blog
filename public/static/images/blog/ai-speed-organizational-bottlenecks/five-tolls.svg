@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="470" viewBox="0 0 1200 470">
+  <rect width="1200" height="470" rx="16" fill="#f8fafc"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="60" y="58" font-size="28" font-weight="700" fill="#0f172a">The five tolls between your laptop and your user</text>
+    <text x="60" y="92" font-size="18" fill="#475569">The engine is the part AI upgraded. Every toll still runs at human speed.</text>
+
+    <!-- road -->
+    <rect x="40" y="270" width="1120" height="70" rx="8" fill="#334155"/>
+    <line x1="40" y1="305" x2="1160" y2="305" stroke="#cbd5e1" stroke-width="3" stroke-dasharray="24 18"/>
+
+    <!-- start -->
+    <rect x="58" y="284" width="92" height="42" rx="8" fill="#16a34a"/>
+    <text x="104" y="311" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">AI + code</text>
+
+    <!-- end -->
+    <rect x="1056" y="284" width="88" height="42" rx="8" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+    <text x="1100" y="311" text-anchor="middle" font-size="15" font-weight="700" fill="#14532d">User</text>
+
+    <!-- tolls -->
+    <g text-anchor="middle">
+      <g>
+        <rect x="178" y="130" width="156" height="118" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+        <text x="256" y="162" font-size="14" fill="#64748b">Toll 1</text>
+        <text x="256" y="190" font-size="18" font-weight="700" fill="#0f172a">Code review</text>
+        <text x="256" y="220" font-size="14" fill="#475569">PRs pile up</text>
+        <line x1="256" y1="248" x2="256" y2="340" stroke="#ef4444" stroke-width="6"/>
+      </g>
+      <g>
+        <rect x="350" y="130" width="156" height="118" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+        <text x="428" y="162" font-size="14" fill="#64748b">Toll 2</text>
+        <text x="428" y="190" font-size="18" font-weight="700" fill="#0f172a">QA + business</text>
+        <text x="428" y="220" font-size="14" fill="#475569">can't absorb it</text>
+        <line x1="428" y1="248" x2="428" y2="340" stroke="#ef4444" stroke-width="6"/>
+      </g>
+      <g>
+        <rect x="522" y="130" width="156" height="118" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+        <text x="600" y="162" font-size="14" fill="#64748b">Toll 3</text>
+        <text x="600" y="190" font-size="18" font-weight="700" fill="#0f172a">Other teams</text>
+        <text x="600" y="220" font-size="14" fill="#475569">the next free slot</text>
+        <line x1="600" y1="248" x2="600" y2="340" stroke="#ef4444" stroke-width="6"/>
+      </g>
+      <g>
+        <rect x="694" y="130" width="156" height="118" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+        <text x="772" y="162" font-size="14" fill="#64748b">Toll 4</text>
+        <text x="772" y="190" font-size="18" font-weight="700" fill="#0f172a">Access</text>
+        <text x="772" y="220" font-size="14" fill="#475569">keys and permissions</text>
+        <line x1="772" y1="248" x2="772" y2="340" stroke="#ef4444" stroke-width="6"/>
+      </g>
+      <g>
+        <rect x="866" y="130" width="156" height="118" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+        <text x="944" y="162" font-size="14" fill="#64748b">Toll 5</text>
+        <text x="944" y="190" font-size="18" font-weight="700" fill="#0f172a">Infrastructure</text>
+        <text x="944" y="220" font-size="14" fill="#475569">one queue, one ticket</text>
+        <line x1="944" y1="248" x2="944" y2="340" stroke="#ef4444" stroke-width="6"/>
+      </g>
+    </g>
+
+    <text x="600" y="400" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">Fix the slowest toll first.</text>
+    <text x="600" y="434" text-anchor="middle" font-size="17" fill="#475569">Speeding up anywhere else only adds cars to the queue at that barrier.</text>
+  </g>
+</svg>
