@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520">
+  <rect width="1200" height="520" rx="16" fill="#f8fafc"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="60" y="58" font-size="28" font-weight="700" fill="#0f172a">Where a 20-day card really spends its time</text>
+    <text x="60" y="92" font-size="18" fill="#475569">Illustrative lead time, in working days.</text>
+
+    <!-- legend -->
+    <rect x="60" y="116" width="16" height="16" rx="4" fill="#16a34a"/>
+    <text x="84" y="130" font-size="16" fill="#334155">Writing code</text>
+    <rect x="200" y="116" width="16" height="16" rx="4" fill="#3b78c9"/>
+    <text x="224" y="130" font-size="16" fill="#334155">Everything around it</text>
+
+    <!-- row 1: today (x0=210; 3,3,4,5,5) -->
+    <text x="60" y="194" font-size="18" font-weight="600" fill="#0f172a">Today</text>
+    <text x="60" y="216" font-size="14" fill="#64748b">20 days</text>
+    <g>
+      <rect x="210" y="170" width="130" height="44" rx="4" fill="#16a34a"/>
+      <rect x="342" y="170" width="130" height="44" rx="4" fill="#3b78c9"/>
+      <rect x="474" y="170" width="174" height="44" rx="4" fill="#3b78c9"/>
+      <rect x="650" y="170" width="218" height="44" rx="4" fill="#3b78c9"/>
+      <rect x="870" y="170" width="218" height="44" rx="4" fill="#3b78c9"/>
+    </g>
+    <g font-size="14" fill="#334155" text-anchor="middle">
+      <text x="275" y="236">Code · 3d</text>
+      <text x="407" y="236">Review · 3d</text>
+      <text x="561" y="236">QA + business · 4d</text>
+      <text x="759" y="236">Other teams · 5d</text>
+      <text x="979" y="236">Access + infra · 5d</text>
+    </g>
+
+    <!-- row 2: with AI (0.5,3,4,5,5) -->
+    <text x="60" y="304" font-size="18" font-weight="600" fill="#0f172a">With AI</text>
+    <text x="60" y="326" font-size="14" fill="#64748b">17.5 days</text>
+    <g>
+      <rect x="210" y="280" width="22" height="44" rx="4" fill="#16a34a"/>
+      <rect x="234" y="280" width="130" height="44" rx="4" fill="#3b78c9"/>
+      <rect x="366" y="280" width="174" height="44" rx="4" fill="#3b78c9"/>
+      <rect x="542" y="280" width="218" height="44" rx="4" fill="#3b78c9"/>
+      <rect x="762" y="280" width="218" height="44" rx="4" fill="#3b78c9"/>
+    </g>
+    <g font-size="14" fill="#334155" text-anchor="middle">
+      <text x="221" y="346">0.5d</text>
+      <text x="299" y="346">Review · 3d</text>
+      <text x="453" y="346">QA + business · 4d</text>
+      <text x="651" y="346">Other teams · 5d</text>
+      <text x="871" y="346">Access + infra · 5d</text>
+    </g>
+
+    <!-- row 3: AI + road (0.5,1,1.5,1,0.5) -->
+    <text x="60" y="414" font-size="18" font-weight="600" fill="#0f172a">AI + better road</text>
+    <text x="60" y="436" font-size="14" fill="#64748b">4.5 days</text>
+    <g>
+      <rect x="210" y="390" width="22" height="44" rx="4" fill="#16a34a"/>
+      <rect x="234" y="390" width="44" height="44" rx="4" fill="#3b78c9"/>
+      <rect x="280" y="390" width="66" height="44" rx="4" fill="#3b78c9"/>
+      <rect x="348" y="390" width="44" height="44" rx="4" fill="#3b78c9"/>
+      <rect x="394" y="390" width="22" height="44" rx="4" fill="#3b78c9"/>
+    </g>
+    <text x="432" y="418" font-size="15" fill="#334155">Review 1d · QA + business 1.5d · Other teams 1d · Access + infra 0.5d</text>
+
+    <text x="60" y="490" font-size="16" fill="#475569">AI cut the green block by 83% and the whole trip by only 12.5%. The rest of the gain lives in the road.</text>
+  </g>
+</svg>

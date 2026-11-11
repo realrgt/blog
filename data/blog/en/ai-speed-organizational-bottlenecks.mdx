@@ -1,0 +1,293 @@
+---
+title: "A Formula 1 Engine in a Traffic Jam: Why AI Won't Speed Up Your Company Until You Fix the Road"
+date: '2026-11-06'
+language: en
+tags: ['ai', 'platform-engineering', 'devops', 'architecture', 'productivity']
+authors: ['ergito-vilanculos']
+draft: false
+featured: false
+summary: 'AI removed the bottleneck of writing code and exposed every other one. The math behind the productivity paradox, the five tolls between your laptop and your user, and how to replace approval queues with self-service platforms and automated guardrails.'
+images: ['/static/images/blog/ai-speed-organizational-bottlenecks/cover.png']
+layout: PostLayout
+bibliography: references-data.bib
+---
+
+**Monday, 9:00.** You open your editor and describe an event-driven integration to your AI assistant.
+
+**Monday, 11:00.** The code is ready. Producer, consumer, retries, a dead-letter queue, tests. You lean back, feeling like a Formula 1 driver.
+
+**Sixteen days later,** the feature is still not in production.
+
+Nothing was wrong with the code. You just spent two weeks and change waiting for a queue to be provisioned, an API key to be granted, a meeting with the data team to fit into someone's calendar, and a reviewer to finally open a pull request that was now competing with forty others.
+
+Congratulations: you bolted a **Formula 1 engine** onto your company, and drove it straight into **rush-hour traffic**.
+
+The story is illustrative, but if you work in a large company, you have probably recognized at least two stops on that trip. This post is about why that happens, the math that makes it inevitable, and how to fix the road instead of buying a bigger engine.
+
+## First, This Is Not an Anti-AI Post
+
+Let me get this out of the way: AI at the keyboard is a genuinely useful tool. For this argument, I will even grant the most generous assumption possible, that AI makes writing code **as fast as you like**.
+
+The question is not whether the engine is powerful. The question is what happens to the **whole trip**.
+
+And the data on the whole trip is more sobering than the demos:
+
+- **DORA 2024** estimated that a 25% increase in AI adoption was associated with a **1.5% drop in delivery throughput** and a **7.2% drop in delivery stability** [@DORA2024].
+- **DORA 2025** found throughput had turned positive, but stability remained negative. Its main conclusion is the thesis of this post in one idea: AI **amplifies** what already exists. Teams with loosely coupled systems and fast feedback gain; teams stuck with tight coupling and slow processes see little or no benefit [@DORA2025].
+- **Faros AI**, looking at telemetry from 10,000 developers, saw engineers completing about twice as many code changes while company-level metrics stayed flat [@Faros2025].
+
+> [!NOTE]
+> Be skeptical of your own stopwatch, too. METR's experiments found that developers' self-reported speedups are unreliable. Its latest update says the real gain is probably growing, but that measuring it cleanly has become hard [@METR2026]. So measure the system, not the feeling.
+
+Those are correlations and surveys, not laws of physics. But they all point in the same direction: **individual speed is not organizational speed**.
+
+## The Math of the Traffic Jam
+
+Here is the part I like most, because it needs no opinion. It is a formula from 1967.
+
+### Amdahl's Law, or why the engine can't save you
+
+Gene Amdahl was talking about parallel processors, but his law applies to any process with parts you can speed up and parts you can't [@Amdahl1967]. If a fraction $p$ of the total time can be accelerated by a factor $s$, the overall speedup is:
+
+$$
+S = \frac{1}{(1 - p) + \frac{p}{s}}
+$$
+
+Now take the limit. Even if AI were infinitely fast ($s \to \infty$), the gain is capped at $\frac{1}{1-p}$. **The part you did not touch sets the speed limit.**
+
+So how big is $p$? In IDC's survey, developers reported spending about **16% of their time on application development** [@IDC2025]. That measures a developer's month, not a card's lead time, but it is a useful order of magnitude. Let's run the numbers:
+
+| Share of lead time that is coding ($p$) | AI 2× faster | AI 5× faster | AI 10× faster | AI infinitely fast |
+| --------------------------------------- | ------------ | ------------ | ------------- | ------------------ |
+| **15%**                                 | 1.08×        | 1.14×        | 1.16×         | **1.18×**          |
+| **30%**                                 | 1.18×        | 1.32×        | 1.37×         | **1.43×**          |
+| **50%**                                 | 1.33×        | 1.67×        | 1.82×         | **2.00×**          |
+
+Read the first row again. With coding at 15% of the trip, **an infinitely fast AI makes your company 18% faster**. Not ten times. Eighteen percent.
+
+![Stacked bars of an illustrative 20-day card: today, 3 days of code and 17 days around it; with AI, half a day of code and the same 17 days, totaling 17.5; with AI and a better road, 4.5 days in total](/static/images/blog/ai-speed-organizational-bottlenecks/lead-time-chart.svg)
+
+In this illustrative card, AI cuts coding by 83%, a spectacular result that shaves only **12.5%** off the delivery. The third bar is where the real gain lives, and no model will deliver it for you.
+
+### Goldratt, or why the speedup can backfire
+
+Amdahl tells you the gain is limited. Eliyahu Goldratt tells you it can get worse.
+
+In _The Goal_, his novel about a struggling factory, Goldratt argues that a system moves at the speed of its **constraint**: an hour lost at the bottleneck is lost for the whole plant, while an hour saved anywhere else is an illusion [@Goldratt2004]. Speeding up a non-bottleneck only **produces inventory piling up in front of the bottleneck**.
+
+In software, that inventory has a name: open pull requests, undeployed branches, stories waiting for homologation.
+
+### Little's Law, or why the queue bites back
+
+Queueing theory closes the argument. Little's Law relates the average items in a system ($L$), their arrival rate ($\lambda$) and the average time each one spends inside ($W$) [@Little1961]:
+
+$$
+L = \lambda W
+$$
+
+Rearranged, $W = L / \lambda$. If AI doubles the number of PRs arriving, but your reviewers keep the same capacity, more work sits in progress and **every item waits longer**. Past the point where arrivals outpace capacity, the queue simply grows without limit.
+
+So the extra code does not merely fail to help. **It makes each individual delivery slower**, including the urgent ones.
+
+## The Five Tolls
+
+Time to look at the road itself. Between your laptop and your user, there are five tolls, and AI did not upgrade any of them.
+
+![A road from AI and code to the user, blocked by five barriers: code review, QA and business, other teams, access, and infrastructure](/static/images/blog/ai-speed-organizational-bottlenecks/five-tolls.svg)
+
+### Toll 1: Code review
+
+The first barrier is the closest one. More generated code means more diffs, usually bigger ones, landing on the same few senior engineers.
+
+The cruel part: reviewing code you did not write takes real effort, and reviewing code **nobody fully wrote** takes more. Reviewers either become the new bottleneck, or start skimming and approving, which is how instability gets in.
+
+### Toll 2: QA and business
+
+Your team can now generate features faster than anyone can validate them. QA drowns, and so does the business: someone has to homologate the change, update the process, train the operation and announce it to customers.
+
+A company can only **absorb** change at a certain speed. Writing a feature nobody has time to validate does not produce value. It produces inventory.
+
+### Toll 3: The invisible borders between teams
+
+This is the most expensive toll, and it does not show up on any dashboard.
+
+You generate that event-driven solution in two hours, then wait two weeks for an alignment meeting with the data or integrations team. AI gives superpowers to the **individual developer**, but it has no authority over the calendar of the team next door.
+
+Back in 1968, Melvin Conway observed that organizations design systems that mirror their communication structures [@Conway1968]. Read it backwards, and it explains the wall you just hit: if your architecture is a tightly coupled monolith, **every change is a negotiation**. Add an architecture committee that meets every other Thursday, and the speed of AI dies in the waiting room.
+
+This is the illusion of autonomy. You feel free because you can produce anything. You are not free, because you can't **ship** anything alone.
+
+### Toll 4: Access
+
+AI invites experimentation: "let me quickly try this against the real API". Then reality arrives:
+
+- The API key requires a form, a manager's approval and a security review.
+- Read access to the staging database takes a ticket and three days.
+- Permissions across two ecosystems of the company belong to two different owners, and neither one knows about the other.
+
+Security exists for excellent reasons, and I will defend it further down. But when the secure path takes a week and the insecure path takes a minute, you are not improving security. You are **training people to route around it**.
+
+### Toll 5: Infrastructure
+
+My favorite, because the contrast is almost funny.
+
+AI writes you a microservice in the blink of an eye. To run it, you need an S3 bucket, an SQS queue and a database. So you open a ticket, and wait for a DevOps engineer who has forty others ahead of yours.
+
+To be clear: **DevOps engineers are not the villains of this story.** They are the most overloaded people on it. A model where every resource goes through a human queue turns the most capable engineers in the company into a ticket-processing service. The problem is the operating model, not the people.
+
+## What Happens When You Floor It Anyway
+
+If leadership buys AI licenses, celebrates the code volume and changes nothing else, some consequences are quite predictable.
+
+**Fragmentation.** Three teams, each moving fast and alone, generate three authentication utilities. All of them work. All of them differ slightly. Generating code became cheaper than finding out whether it already exists, and duplication is now an industrial process.
+
+**Debt at compound interest.** Code that nobody fully understands, in volume nobody can fully review, on top of coupling nobody fixed. Stability metrics going down is not a mystery.
+
+**Burnout by frustration.** This one is rarely discussed. There is a particular kind of exhaustion in feeling extremely productive at the keyboard, and completely paralyzed everywhere else. You did two weeks of work by Tuesday, and you will spend the rest of the month chasing approvals.
+
+**Shadow infrastructure.** Blocked people find workarounds. Personal API keys, a queue in a forgotten account, a script on someone's laptop. Nobody plans these. They are what a slow official path produces.
+
+## Widening the Road
+
+The good news: none of this needs a revolution. It needs treating the path to production as a **product**. Five moves, in order.
+
+### 1. Find your actual bottleneck first
+
+Goldratt's advice is the cheapest of all: before improving anything, **find the constraint**.
+
+Take your last ten delivered cards, and split their lead time into stages: coding, waiting for review, waiting for QA, waiting for another team, waiting for access or infrastructure. It is an uncomfortable afternoon with a spreadsheet, and the best investment in this post. Whichever bar is largest gets the next quarter's attention. Everything else can wait.
+
+### 2. Give review and QA their own engines
+
+Use the same technology on the congested tolls, with humans keeping the judgment:
+
+- **Smaller PRs, by agreement.** A size limit is the most effective way to reduce review load, and AI makes splitting cheap.
+- **AI as the first pass of review,** so humans focus on design and business rules rather than style and typos.
+- **Automated tests as a release condition,** including the ones AI helps you write. DORA's point is that strong automated testing and fast feedback are what keep the extra volume from becoming instability [@DORA2025].
+- **Feature flags to separate deploy from release.** Code can reach production continuously, while the business turns it on when it is ready to absorb it. Toll 2 stops blocking Toll 1.
+
+### 3. Replace meetings with contracts
+
+Many alignment meetings exist to answer one question: _"what exactly will you send me?"_ That question has a better answer than a calendar invite: a **versioned contract**.
+
+```yaml:contracts/orders.asyncapi.yaml
+asyncapi: 3.0.0
+info:
+  title: Orders Events
+  version: 1.2.0
+channels:
+  orderCreated:
+    address: orders.order-created
+    messages:
+      orderCreated:
+        payload:
+          type: object
+          required: [orderId, customerId, createdAt]
+          properties:
+            orderId: { type: string, format: uuid }
+            customerId: { type: string }
+            createdAt: { type: string, format: date-time }
+operations:
+  publishOrderCreated:
+    action: send
+    channel:
+      $ref: '#/channels/orderCreated'
+```
+
+With a contract in the repository, the consumer can build against it today, and a breaking change fails in CI instead of in a meeting. That is why [event-driven architecture](/blog/event-driven-architecture) matters so much here: it removes the need for teams to wait for each other, in the runtime **and** in the calendar. As a bonus, an explicit contract is exactly the kind of context that makes AI assistants more accurate.
+
+### 4. Make infrastructure self-service
+
+This is the heart of **platform engineering**. In _Team Topologies_, Skelton and Pais describe platform teams whose job is to reduce the cognitive load of product teams, offering internal services they can consume on their own [@Skelton2019]. DORA 2025 found a direct correlation between a high-quality internal platform and the ability to unlock the value of AI [@DORA2025].
+
+In practice, the ticket becomes a pull request against a **pre-approved module**:
+
+```hcl:infra/orders-queue.tf
+# Encryption, dead-letter queue, alarms and tags come with the module.
+module "orders_queue" {
+  source = "git::https://git.example.com/platform/terraform-aws-sqs.git?ref=v2.4.0"
+
+  name                = "orders-created"
+  team                = "orders"
+  data_classification = "internal"
+}
+```
+
+The DevOps engineer who used to create queues by hand now **maintains the module**, and every team benefits at once. That is the shift: from operating tickets to building a product. A developer portal such as [Backstage](https://backstage.io/) can sit on top, offering these golden paths as templates, but start with the modules. Do not build a portal before you have anything to put in it.
+
+### 5. Turn permission into guardrails
+
+This is the cultural move, and the hardest one. It means replacing **"ask for authorization"** with **"the rules run in the pipeline"**.
+
+Most approval meetings check things a machine can check. So let the machine do it, with **policy as code**. Here is an illustrative rule using [Open Policy Agent](https://www.openpolicyagent.org/docs/latest/) and [Conftest](https://www.conftest.dev/):
+
+```rego:policy/sqs.rego
+package main
+
+import rego.v1
+
+deny contains msg if {
+	some rc in input.resource_changes
+	rc.type == "aws_sqs_queue"
+	not encrypted(rc.change.after)
+	msg := sprintf("%s: queues must be encrypted", [rc.address])
+}
+
+encrypted(queue) if queue.sqs_managed_sse_enabled == true
+
+encrypted(queue) if queue.kms_master_key_id != null
+```
+
+```bash
+terraform plan -out=plan.out
+terraform show -json plan.out | conftest test -
+```
+
+A non-compliant queue now fails in seconds, with a clear message, at 3 a.m. if necessary. Nobody needs to wait for a Thursday. The same logic applies to the other tolls:
+
+| Toll               | Today: ask permission          | Tomorrow: guardrail                                                    |
+| ------------------ | ------------------------------ | ---------------------------------------------------------------------- |
+| **Infrastructure** | Ticket to DevOps               | Pre-approved modules and policy checks in CI                           |
+| **Access**         | Form and manager approval      | Role-based, short-lived access granted automatically, with audit trail |
+| **Architecture**   | Committee every other Thursday | Published standards, checks in CI, ADRs for exceptions                 |
+| **Integration**    | Alignment meeting              | Versioned contracts with compatibility checks                          |
+| **Release**        | Change board                   | Automated tests, feature flags, progressive rollout                    |
+
+> [!IMPORTANT]
+> Guardrails do not mean removing every human. Irreversible, regulated or high-risk changes deserve a person's judgment, especially around money and personal data. The goal is to spend human attention **only where it adds something a machine can't**, and not on checking whether a queue is encrypted.
+
+## What You Can Do on Monday
+
+This is not only a leadership problem. Everyone has a lever.
+
+**If you are a developer:**
+
+- [ ] Stop measuring your week in code generated. Measure when it **reached a user**.
+- [ ] Before generating anything, ask who you will depend on, and start that conversation **first**.
+- [ ] Search for an existing solution before you generate a fourth authentication utility.
+- [ ] Keep PRs small, and review others' work as seriously as you want yours reviewed.
+
+**If you are a tech lead:**
+
+- [ ] Run the spreadsheet exercise on your last ten cards, and share the result.
+- [ ] Publish contracts, and turn one recurring alignment meeting into a CI check.
+- [ ] Limit work in progress. A queue you do not start is a queue you do not have to manage.
+
+**If you lead engineering:**
+
+- [ ] Stop celebrating lines of code and PR counts. They are engine metrics, and you have a road problem.
+- [ ] Track lead time, deployment frequency and change failure rate, and treat them as **system** results.
+- [ ] Fund the platform team **before** the next batch of AI licenses.
+- [ ] For each approval step, ask what it really protects, and whether a pipeline could protect it better.
+
+## Fix the Road
+
+A Formula 1 engine is a wonderful thing. In a traffic jam, it is just a very expensive way to burn fuel while standing still.
+
+AI solved the problem of **how to do it fast**. What remains is a different problem, and it belongs to leadership and platform engineering: **how to let it reach the user without asking five teams for permission**.
+
+The companies that win this round will not be the ones with the biggest engine. They will be the ones that, when the light turns green, actually have a road ahead of them.
+
+## References
+
+[^ref]

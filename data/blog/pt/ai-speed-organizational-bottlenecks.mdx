@@ -1,0 +1,293 @@
+---
+title: 'Um motor de Fórmula 1 no engarrafamento: por que a IA não acelera a sua empresa enquanto a estrada não mudar'
+date: '2026-11-06'
+language: pt
+tags: ['ai', 'platform-engineering', 'devops', 'architecture', 'productivity']
+authors: ['ergito-vilanculos']
+draft: false
+featured: false
+summary: 'A IA tirou o gargalo de escrever código e expôs todos os outros. A matemática por trás do paradoxo da produtividade, os cinco pedágios entre o seu notebook e o usuário, e como trocar filas de aprovação por plataformas self-service e guardrails automatizados.'
+images: ['/static/images/blog/ai-speed-organizational-bottlenecks/cover.png']
+layout: PostLayout
+bibliography: references-data.bib
+---
+
+**Segunda-feira, 9h.** Você abre o editor e descreve uma integração orientada a eventos para o seu assistente de IA.
+
+**Segunda-feira, 11h.** O código está pronto. Producer, consumer, retries, dead-letter queue, testes. Você se recosta na cadeira, sentindo-se um piloto de Fórmula 1.
+
+**Dezesseis dias depois,** a funcionalidade ainda não chegou em produção.
+
+Não havia nada de errado com o código. Você só passou duas semanas e uns trocados esperando: uma fila ser provisionada, uma chave de API ser liberada, uma reunião com o time de dados caber na agenda de alguém, e um revisor finalmente abrir um pull request que agora disputava atenção com outros quarenta.
+
+Parabéns: você instalou um **motor de Fórmula 1** na sua empresa e foi direto para o **engarrafamento da hora do rush**.
+
+A história é ilustrativa, mas, se você trabalha numa empresa grande, provavelmente reconheceu pelo menos duas paradas dessa viagem. Este post é sobre por que isso acontece, a matemática que torna isso inevitável, e como consertar a estrada em vez de comprar um motor maior.
+
+## Antes de tudo: este não é um post contra a IA
+
+Deixa eu tirar isso do caminho: a IA no teclado é uma ferramenta realmente útil. Para este argumento, vou até aceitar a hipótese mais generosa possível: a de que a IA deixa a escrita de código **tão rápida quanto você quiser**.
+
+A questão não é se o motor é potente. A questão é o que acontece com a **viagem inteira**.
+
+E os dados sobre a viagem inteira são mais sóbrios do que as demos:
+
+- O **DORA 2024** estimou que um aumento de 25% na adoção de IA estava associado a uma **queda de 1,5% no throughput de entrega** e de **7,2% na estabilidade** [@DORA2024].
+- O **DORA 2025** viu o throughput ficar positivo, mas a estabilidade continuou negativa. A principal conclusão é a tese deste post numa ideia só: a IA **amplifica** o que já existe. Times com sistemas desacoplados e feedback rápido ganham; times presos em forte acoplamento e processos lentos veem pouco ou nenhum benefício [@DORA2025].
+- A **Faros AI**, olhando a telemetria de 10 mil desenvolvedores, viu engenheiros concluindo cerca do dobro de mudanças de código, enquanto as métricas da empresa continuavam estáveis [@Faros2025].
+
+> [!NOTE]
+> Desconfie do seu próprio cronômetro também. Os experimentos do METR concluíram que os ganhos de velocidade autodeclarados pelos desenvolvedores não são confiáveis. A atualização mais recente diz que o ganho real provavelmente está crescendo, mas que medi-lo de forma limpa ficou difícil [@METR2026]. Então meça o sistema, não a sensação.
+
+São correlações e pesquisas, não leis da física. Mas todas apontam para o mesmo lado: **velocidade individual não é velocidade organizacional**.
+
+## A matemática do engarrafamento
+
+Esta é a parte de que eu mais gosto, porque ela não depende de opinião. É uma fórmula de 1967.
+
+### Lei de Amdahl, ou por que o motor não te salva
+
+Gene Amdahl estava falando de processadores paralelos, mas a lei dele vale para qualquer processo com partes que podem ser aceleradas e partes que não podem [@Amdahl1967]. Se uma fração $p$ do tempo total pode ser acelerada por um fator $s$, o ganho geral é:
+
+$$
+S = \frac{1}{(1 - p) + \frac{p}{s}}
+$$
+
+Agora leve ao limite. Mesmo que a IA fosse infinitamente rápida ($s \to \infty$), o ganho teria um teto de $\frac{1}{1-p}$. **A parte que você não mexeu define o limite de velocidade.**
+
+E qual é o tamanho de $p$? Na pesquisa da IDC, os desenvolvedores disseram gastar cerca de **16% do tempo com desenvolvimento de aplicações** [@IDC2025]. Isso mede o mês de um desenvolvedor, e não o lead time de um card, mas é uma boa ordem de grandeza. Vamos fazer a conta:
+
+| Fatia do lead time que é código ($p$) | IA 2× mais rápida | IA 5× mais rápida | IA 10× mais rápida | IA infinitamente rápida |
+| ------------------------------------- | ----------------- | ----------------- | ------------------ | ----------------------- |
+| **15%**                               | 1,08×             | 1,14×             | 1,16×              | **1,18×**               |
+| **30%**                               | 1,18×             | 1,32×             | 1,37×              | **1,43×**               |
+| **50%**                               | 1,33×             | 1,67×             | 1,82×              | **2,00×**               |
+
+Leia a primeira linha de novo. Com o código ocupando 15% da viagem, **uma IA infinitamente rápida deixa a sua empresa 18% mais rápida**. Não dez vezes. Dezoito por cento.
+
+![Barras empilhadas de um card ilustrativo de 20 dias: hoje, 3 dias de código e 17 dias em volta dele; com IA, meio dia de código e os mesmos 17 dias, somando 17,5; com IA e uma estrada melhor, 4,5 dias no total](/static/images/blog/ai-speed-organizational-bottlenecks/lead-time-chart.svg)
+
+Neste card ilustrativo, a IA corta o tempo de código em 83%, um resultado espetacular que tira só **12,5%** da entrega. O ganho de verdade está na terceira barra, e nenhum modelo vai entregá-lo para você.
+
+### Goldratt, ou por que a aceleração pode sair pela culatra
+
+Amdahl diz que o ganho é limitado. Eliyahu Goldratt diz que pode piorar.
+
+Em _A Meta_ (_The Goal_), romance sobre uma fábrica em apuros, Goldratt argumenta que um sistema anda na velocidade da sua **restrição**: uma hora perdida no gargalo é perdida pela fábrica inteira, enquanto uma hora economizada em qualquer outro lugar é uma ilusão [@Goldratt2004]. Acelerar o que não é gargalo só **empilha estoque na frente do gargalo**.
+
+Em software, esse estoque tem nome: pull requests abertos, branches sem deploy, histórias esperando homologação.
+
+### Lei de Little, ou por que a fila revida
+
+A teoria das filas fecha o argumento. A Lei de Little relaciona a média de itens num sistema ($L$), a taxa de chegada ($\lambda$) e o tempo médio que cada um passa lá dentro ($W$) [@Little1961]:
+
+$$
+L = \lambda W
+$$
+
+Reorganizando, $W = L / \lambda$. Se a IA dobra o número de PRs chegando, mas os revisores mantêm a mesma capacidade, mais trabalho fica em andamento e **cada item espera mais**. Quando as chegadas passam da capacidade, a fila simplesmente cresce sem limite.
+
+Ou seja, o código a mais não só deixa de ajudar. **Ele deixa cada entrega individual mais lenta**, inclusive as urgentes.
+
+## Os cinco pedágios
+
+Hora de olhar para a estrada. Entre o seu notebook e o seu usuário existem cinco pedágios, e a IA não melhorou nenhum deles.
+
+![Uma estrada que vai da IA e do código até o usuário, bloqueada por cinco cancelas: code review, QA e negócio, outros times, acessos e infraestrutura](/static/images/blog/ai-speed-organizational-bottlenecks/five-tolls.svg)
+
+### Pedágio 1: code review
+
+A primeira cancela é a mais próxima. Mais código gerado significa mais diffs, normalmente maiores, caindo nas mãos dos mesmos poucos seniores.
+
+A parte cruel: revisar código que você não escreveu dá trabalho, e revisar código que **ninguém escreveu por inteiro** dá mais ainda. Os revisores viram o novo gargalo, ou começam a passar o olho e aprovar, e é assim que a instabilidade entra.
+
+### Pedágio 2: QA e negócio
+
+O seu time agora gera funcionalidades mais rápido do que qualquer um consegue validar. O QA se afoga, e o negócio também: alguém precisa homologar a mudança, atualizar o processo, treinar a operação e avisar os clientes.
+
+Uma empresa só consegue **absorver** mudança até uma certa velocidade. Escrever uma funcionalidade que ninguém tem tempo de validar não produz valor. Produz estoque.
+
+### Pedágio 3: as fronteiras invisíveis entre times
+
+Este é o pedágio mais caro, e ele não aparece em nenhum dashboard.
+
+Você gera aquela solução orientada a eventos em duas horas e depois espera duas semanas por uma reunião de alinhamento com o time de dados ou de integrações. A IA dá superpoderes ao **desenvolvedor individual**, mas não tem nenhuma autoridade sobre a agenda do time ao lado.
+
+Lá em 1968, Melvin Conway observou que as organizações desenham sistemas que espelham as suas estruturas de comunicação [@Conway1968]. Leia isso ao contrário e fica explicado o muro em que você acabou de bater: se a sua arquitetura é um monólito acoplado, **toda mudança é uma negociação**. Junte um comitê de arquitetura que se reúne de quinze em quinze dias, e a velocidade da IA morre na sala de espera.
+
+Essa é a ilusão da autonomia. Você se sente livre porque consegue produzir qualquer coisa. Não é livre, porque não consegue **entregar** nada sozinho.
+
+### Pedágio 4: acessos
+
+A IA convida à experimentação: "deixa eu testar rapidinho na API de verdade". Aí a realidade chega:
+
+- A chave de API exige formulário, aprovação do gestor e revisão de segurança.
+- O acesso de leitura ao banco de staging leva um ticket e três dias.
+- As permissões entre dois ecossistemas da empresa têm dois donos, e um não sabe da existência do outro.
+
+Segurança existe por ótimos motivos, e vou defendê-la mais adiante. Mas, quando o caminho seguro leva uma semana e o inseguro leva um minuto, você não está melhorando a segurança. Está **treinando as pessoas a contorná-la**.
+
+### Pedágio 5: infraestrutura
+
+O meu favorito, porque o contraste é quase engraçado.
+
+A IA escreve um microsserviço num piscar de olhos. Para rodar, você precisa de um bucket S3, uma fila SQS e um banco de dados. Então você abre um ticket e espera um engenheiro de DevOps que tem outros quarenta na frente do seu.
+
+Para ficar claro: **o pessoal de DevOps não é o vilão desta história.** É o mais sobrecarregado dela. Um modelo em que todo recurso passa por uma fila humana transforma os engenheiros mais capazes da empresa num serviço de processamento de tickets. O problema é o modelo de operação, não as pessoas.
+
+## O que acontece quando você pisa fundo mesmo assim
+
+Se a liderança compra licenças de IA, comemora o volume de código e não muda mais nada, algumas consequências são bem previsíveis.
+
+**Fragmentação.** Três times, cada um rápido e sozinho, geram três utilitários de autenticação. Todos funcionam. Todos são um pouco diferentes. Gerar código ficou mais barato do que descobrir se ele já existe, e a duplicação virou um processo industrial.
+
+**Dívida a juros compostos.** Código que ninguém entende por inteiro, num volume que ninguém consegue revisar por inteiro, em cima de um acoplamento que ninguém consertou. A queda nas métricas de estabilidade não é nenhum mistério.
+
+**Burnout por frustração.** Desse quase não se fala. Existe um tipo particular de cansaço em se sentir extremamente produtivo no teclado e completamente paralisado em todo o resto. Você fez duas semanas de trabalho até terça-feira, e vai passar o resto do mês correndo atrás de aprovação.
+
+**Infraestrutura paralela.** Gente bloqueada encontra atalho. Chave de API pessoal, uma fila numa conta esquecida, um script no notebook de alguém. Ninguém planeja isso. É o que um caminho oficial lento produz.
+
+## Alargando a estrada
+
+A boa notícia: nada disso exige uma revolução. Exige tratar o caminho até a produção como um **produto**. Cinco movimentos, nesta ordem.
+
+### 1. Encontre o seu gargalo de verdade
+
+O conselho do Goldratt é o mais barato de todos: antes de melhorar qualquer coisa, **encontre a restrição**.
+
+Pegue os seus últimos dez cards entregues e divida o lead time em etapas: código, espera por review, espera por QA, espera por outro time, espera por acesso ou infraestrutura. É uma tarde desconfortável com uma planilha, e o melhor investimento deste post. A maior barra fica com a atenção do próximo trimestre. O resto pode esperar.
+
+### 2. Dê um motor para o review e para o QA
+
+Use a mesma tecnologia nos pedágios congestionados, mantendo o julgamento com as pessoas:
+
+- **PRs menores, por acordo.** Um limite de tamanho é a forma mais eficaz de reduzir a carga de review, e a IA barateia a divisão.
+- **IA como primeira passada do review,** para que as pessoas foquem em design e regra de negócio, e não em estilo e erro de digitação.
+- **Testes automatizados como condição de release,** inclusive os que a IA ajuda a escrever. O ponto do DORA é que testes automatizados fortes e feedback rápido é que impedem o volume extra de virar instabilidade [@DORA2025].
+- **Feature flags para separar deploy de release.** O código chega em produção continuamente, e o negócio liga quando estiver pronto para absorver. O pedágio 2 para de bloquear o pedágio 1.
+
+### 3. Troque reuniões por contratos
+
+Muitas reuniões de alinhamento existem para responder uma pergunta: _"o que exatamente você vai me mandar?"_ Essa pergunta tem uma resposta melhor do que um convite de calendário: um **contrato versionado**.
+
+```yaml:contracts/orders.asyncapi.yaml
+asyncapi: 3.0.0
+info:
+  title: Orders Events
+  version: 1.2.0
+channels:
+  orderCreated:
+    address: orders.order-created
+    messages:
+      orderCreated:
+        payload:
+          type: object
+          required: [orderId, customerId, createdAt]
+          properties:
+            orderId: { type: string, format: uuid }
+            customerId: { type: string }
+            createdAt: { type: string, format: date-time }
+operations:
+  publishOrderCreated:
+    action: send
+    channel:
+      $ref: '#/channels/orderCreated'
+```
+
+Com um contrato no repositório, o consumidor consegue construir em cima dele hoje, e uma mudança que quebra compatibilidade falha no CI, e não numa reunião. É por isso que a [arquitetura orientada a eventos](/pt/blog/event-driven-architecture) importa tanto aqui: ela elimina a necessidade de os times esperarem uns pelos outros, em tempo de execução **e** na agenda. De bônus, um contrato explícito é exatamente o tipo de contexto que deixa os assistentes de IA mais precisos.
+
+### 4. Torne a infraestrutura self-service
+
+Este é o coração da **engenharia de plataforma**. Em _Team Topologies_, Skelton e Pais descrevem times de plataforma cuja função é reduzir a carga cognitiva dos times de produto, oferecendo serviços internos que eles consomem por conta própria [@Skelton2019]. O DORA 2025 encontrou uma correlação direta entre uma plataforma interna de alta qualidade e a capacidade de extrair valor da IA [@DORA2025].
+
+Na prática, o ticket vira um pull request contra um **módulo pré-aprovado**:
+
+```hcl:infra/orders-queue.tf
+# Encryption, dead-letter queue, alarms and tags come with the module.
+module "orders_queue" {
+  source = "git::https://git.example.com/platform/terraform-aws-sqs.git?ref=v2.4.0"
+
+  name                = "orders-created"
+  team                = "orders"
+  data_classification = "internal"
+}
+```
+
+O engenheiro de DevOps que criava filas na mão agora **mantém o módulo**, e todos os times se beneficiam de uma vez. Essa é a virada: de operar tickets para construir um produto. Um portal de desenvolvedor como o [Backstage](https://backstage.io/) pode ficar por cima, oferecendo esses caminhos prontos como templates, mas comece pelos módulos. Não construa um portal antes de ter o que colocar nele.
+
+### 5. Transforme permissão em guardrails
+
+Este é o movimento cultural, e o mais difícil. Significa trocar **"pedir autorização"** por **"as regras rodam no pipeline"**.
+
+A maioria das reuniões de aprovação confere coisas que uma máquina consegue conferir. Então deixe a máquina conferir, com **policy as code**. Esta é uma regra ilustrativa usando [Open Policy Agent](https://www.openpolicyagent.org/docs/latest/) e [Conftest](https://www.conftest.dev/):
+
+```rego:policy/sqs.rego
+package main
+
+import rego.v1
+
+deny contains msg if {
+	some rc in input.resource_changes
+	rc.type == "aws_sqs_queue"
+	not encrypted(rc.change.after)
+	msg := sprintf("%s: queues must be encrypted", [rc.address])
+}
+
+encrypted(queue) if queue.sqs_managed_sse_enabled == true
+
+encrypted(queue) if queue.kms_master_key_id != null
+```
+
+```bash
+terraform plan -out=plan.out
+terraform show -json plan.out | conftest test -
+```
+
+Uma fila fora do padrão agora falha em segundos, com uma mensagem clara, às 3 da manhã se for preciso. Ninguém precisa esperar a próxima reunião do comitê. A mesma lógica vale para os outros pedágios:
+
+| Pedágio            | Hoje: pedir permissão            | Amanhã: guardrail                                                                       |
+| ------------------ | -------------------------------- | --------------------------------------------------------------------------------------- |
+| **Infraestrutura** | Ticket para o DevOps             | Módulos pré-aprovados e checagem de políticas no CI                                     |
+| **Acessos**        | Formulário e aprovação do gestor | Acesso por papel, de curta duração, concedido automaticamente e com trilha de auditoria |
+| **Arquitetura**    | Comitê de quinze em quinze dias  | Padrões publicados, checagens no CI, ADRs para as exceções                              |
+| **Integração**     | Reunião de alinhamento           | Contratos versionados com checagem de compatibilidade                                   |
+| **Release**        | Comitê de mudanças               | Testes automatizados, feature flags, rollout progressivo                                |
+
+> [!IMPORTANT]
+> Guardrails não significam tirar todas as pessoas do caminho. Mudanças irreversíveis, reguladas ou de alto risco merecem o julgamento de alguém, principalmente quando envolvem dinheiro e dados pessoais. O objetivo é gastar atenção humana **só onde ela acrescenta algo que a máquina não consegue**, e não em conferir se uma fila está criptografada.
+
+## O que você pode fazer na segunda-feira
+
+Este não é só um problema da liderança. Todo mundo tem uma alavanca.
+
+**Se você é desenvolvedor:**
+
+- [ ] Pare de medir a sua semana em código gerado. Meça quando ele **chegou ao usuário**.
+- [ ] Antes de gerar qualquer coisa, pergunte de quem você vai depender e comece essa conversa **primeiro**.
+- [ ] Procure uma solução existente antes de gerar o quarto utilitário de autenticação.
+- [ ] Mantenha os PRs pequenos, e revise o trabalho dos outros com a seriedade que você quer no seu.
+
+**Se você é tech lead:**
+
+- [ ] Faça o exercício da planilha com os seus últimos dez cards e compartilhe o resultado.
+- [ ] Publique contratos e transforme uma reunião recorrente de alinhamento numa checagem de CI.
+- [ ] Limite o trabalho em andamento. Fila que não começa é fila que não precisa de gestão.
+
+**Se você lidera engenharia:**
+
+- [ ] Pare de comemorar linhas de código e número de PRs. São métricas de motor, e o seu problema é de estrada.
+- [ ] Acompanhe lead time, frequência de deploy e taxa de falha em mudanças, e trate esses números como resultado do **sistema**.
+- [ ] Financie o time de plataforma **antes** do próximo lote de licenças de IA.
+- [ ] Para cada etapa de aprovação, pergunte o que ela realmente protege, e se um pipeline protegeria melhor.
+
+## Conserte a estrada
+
+Um motor de Fórmula 1 é uma coisa maravilhosa. No engarrafamento, é só um jeito muito caro de queimar combustível parado.
+
+A IA resolveu o problema de **como fazer rápido**. O que sobra é um problema diferente, e ele é da liderança e da engenharia de plataforma: **como deixar isso chegar ao usuário sem pedir licença a cinco times diferentes**.
+
+As empresas que vão ganhar esta rodada não serão as do maior motor. Serão as que, quando o sinal abrir, tiverem de fato uma estrada pela frente.
+
+## Referências
+
+[^ref]
